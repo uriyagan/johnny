@@ -36,3 +36,10 @@ export interface GeneratedCopy {
   /** High-converting Hebrew ad-copy variants. */
   variants: string[];
 }
+
+export interface RejectionExplanation {
+  /** Plain-Hebrew explanation of why the ad was rejected. */
+  reasonHe: string;
+  /** Safe, policy-compliant Hebrew copy variants to try instead. */
+  safeCopy: string[];
+}

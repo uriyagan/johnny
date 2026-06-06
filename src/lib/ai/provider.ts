@@ -3,6 +3,7 @@ import type {
   AssetAnalysis,
   ChatMessageInput,
   GeneratedCopy,
+  RejectionExplanation,
 } from "./types";
 
 /**
@@ -24,4 +25,7 @@ export interface AIProvider {
 
   /** Draft high-converting Hebrew ad copy. */
   generateCopy(input: { product: string; tone?: string }): Promise<GeneratedCopy>;
+
+  /** Translate a raw Meta rejection reason into plain Hebrew + safe copy (Pillar 3). */
+  explainRejection(reason: string): Promise<RejectionExplanation>;
 }

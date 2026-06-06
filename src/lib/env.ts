@@ -25,6 +25,8 @@ const serverSchema = z.object({
   RESEND_API_KEY: z.string().optional(),
   META_APP_ID: z.string().optional(),
   META_APP_SECRET: z.string().optional(),
+  /** Token echoed back during Meta webhook subscription verification. */
+  META_VERIFY_TOKEN: z.string().optional(),
   /** Shared secret the Cloudflare Worker sends to authorize cron endpoints. */
   CRON_SECRET: z.string().optional(),
 });

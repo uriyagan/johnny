@@ -7,6 +7,7 @@ import type {
   GeneratedCopy,
   IntentAction,
   ParsedIntent,
+  RejectionExplanation,
 } from "./types";
 
 const delay = (ms = 350) => new Promise((r) => setTimeout(r, ms));
@@ -75,6 +76,32 @@ export class MockAIProvider implements AIProvider {
         `${p} שכולם מדברים עליו — הזמינו עכשיו וקבלו משלוח מהיר! 🌟`,
         `רוצים את ${p}? הגיע הזמן לפנק את עצמכם. לחצו ותגלו.`,
         `${p} במחיר שלא תמצאו במקום אחר. כמות מוגבלת!`,
+      ],
+    };
+  }
+
+  async explainRejection(reason: string): Promise<RejectionExplanation> {
+    await delay();
+    const r = reason.toLowerCase();
+
+    let reasonHe =
+      "המודעה נדחתה. בדרך כלל מספיק לשנות מעט את הטקסט או את התמונה ולשלוח שוב.";
+    if (r.includes("sensitive") || r.includes("social issues")) {
+      reasonHe =
+        "המודעה נדחתה כי היא נוגעת בנושא רגיש (למשל פוליטיקה או חברה). צריך לנסח אותה מחדש בלי התייחסות לנושא הרגיש.";
+    } else if (r.includes("personal attributes")) {
+      reasonHe =
+        "המודעה נדחתה כי הטקסט מתייחס באופן אישי לגולש (למשל גיל או מצב אישי). כדאי לנסח בצורה כללית יותר.";
+    } else if (r.includes("misleading") || r.includes("exaggerat")) {
+      reasonHe =
+        "המודעה נדחתה כי ההבטחה נשמעת מוגזמת. כדאי לרכך את הניסוח ולהיות מדויקים יותר.";
+    }
+
+    return {
+      reasonHe,
+      safeCopy: [
+        "פרחים טריים לכל אירוע — משלוח מהיר עד הבית 🌸",
+        "רוצים לשמח מישהו? אצלנו תמצאו זר מושלם לכל הזדמנות.",
       ],
     };
   }
