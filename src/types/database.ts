@@ -48,6 +48,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       subscriptions: {
         Row: {
@@ -86,6 +87,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       ad_accounts: {
         Row: {
@@ -130,6 +132,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       campaigns: {
         Row: {
@@ -183,6 +186,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       budget_caps: {
         Row: {
@@ -227,6 +231,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       chat_sessions: {
         Row: {
@@ -250,6 +255,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       chat_messages: {
         Row: {
@@ -279,6 +285,7 @@ export type Database = {
           model?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       assets: {
         Row: {
@@ -320,6 +327,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       crm_feedback: {
         Row: {
@@ -361,6 +369,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       notifications: {
         Row: {
@@ -399,6 +408,7 @@ export type Database = {
           sent_at?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       webhook_events: {
         Row: {
@@ -434,6 +444,7 @@ export type Database = {
           processed_at?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       admin_audit_log: {
         Row: {
@@ -460,6 +471,7 @@ export type Database = {
           details?: Json;
           created_at?: string;
         };
+        Relationships: [];
       };
       api_health: {
         Row: {
@@ -486,6 +498,7 @@ export type Database = {
           details?: Json;
           checked_at?: string;
         };
+        Relationships: [];
       };
       kill_switches: {
         Row: {
@@ -521,9 +534,12 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
     };
-    Views: Record<string, never>;
+    Views: {
+      [_ in never]: never;
+    };
     Functions: {
       is_admin: {
         Args: Record<string, never>;
@@ -573,7 +589,9 @@ export type Database = {
       killswitch_scope: "global" | "user";
       killswitch_type: "api_execution" | "spending";
     };
-    CompositeTypes: Record<string, never>;
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
 };
 

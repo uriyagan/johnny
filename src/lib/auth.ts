@@ -1,0 +1,18 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+/** Returns the current authenticated user, or null. */
+export async function getUser() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+}
+
+/** Returns the current user, or redirects to /login if not signed in. */
+export async function requireUser() {
+  const user = await getUser();
+  if (!user) redirect("/login");
+  return user;
+}
