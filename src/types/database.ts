@@ -446,6 +446,60 @@ export type Database = {
         };
         Relationships: [];
       };
+      tickets: {
+        Row: {
+          id: string;
+          user_id: string;
+          subject: string;
+          status: Database["public"]["Enums"]["ticket_status"];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          subject: string;
+          status?: Database["public"]["Enums"]["ticket_status"];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          subject?: string;
+          status?: Database["public"]["Enums"]["ticket_status"];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ticket_messages: {
+        Row: {
+          id: string;
+          ticket_id: string;
+          sender_id: string | null;
+          from_admin: boolean;
+          body: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          ticket_id: string;
+          sender_id?: string | null;
+          from_admin?: boolean;
+          body: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          ticket_id?: string;
+          sender_id?: string | null;
+          from_admin?: boolean;
+          body?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       recommendation_dismissals: {
         Row: {
           id: string;
@@ -698,6 +752,7 @@ export type Database = {
       user_role: "client" | "admin";
       error_source: "client" | "server";
       error_severity: "warning" | "error" | "fatal";
+      ticket_status: "open" | "answered" | "closed";
       subscription_tier: "tier_1" | "tier_2" | "tier_3" | "tier_4";
       subscription_status:
         | "trialing"
