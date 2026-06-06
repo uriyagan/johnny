@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { PLANS, type Tier } from "@/lib/billing/plans";
 
 function isTier(value: string): value is Tier {
@@ -15,7 +15,7 @@ export async function changePlan(formData: FormData) {
   if (!isTier(tier)) return;
 
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
@@ -38,7 +38,7 @@ export async function changePlan(formData: FormData) {
 /** Flags the subscription to cancel at period end (stays active until then). */
 export async function cancelSubscription() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = createAdminClient();
   await supabase
     .from("subscriptions")
     .update({ cancel_at_period_end: true })
@@ -49,7 +49,7 @@ export async function cancelSubscription() {
 /** Reverts a pending cancellation. */
 export async function resumeSubscription() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = createAdminClient();
   await supabase
     .from("subscriptions")
     .update({ cancel_at_period_end: false })

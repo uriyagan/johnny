@@ -2,6 +2,7 @@ import type {
   AIChatResult,
   AssetAnalysis,
   ChatMessageInput,
+  FeedbackAnalysis,
   GeneratedCopy,
   RejectionExplanation,
 } from "./types";
@@ -28,4 +29,7 @@ export interface AIProvider {
 
   /** Translate a raw Meta rejection reason into plain Hebrew + safe copy (Pillar 3). */
   explainRejection(reason: string): Promise<RejectionExplanation>;
+
+  /** Analyze the merchant's lead-quality feedback into targeting adjustments (Pillar 5). */
+  analyzeFeedback(text: string): Promise<FeedbackAnalysis>;
 }

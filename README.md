@@ -41,4 +41,4 @@ supabase/
 
 ## Roadmap
 M0 Scaffold ✅ · M1 Schema ✅ · M2 RTL shell + auth ✅ · M3 Mock layer ✅ · M4 Chat + Gemini ✅ ·
-M5 Meta onboarding ✅ · M6 Embedded billing ✅ · M7 The 5 pillars · M8 Super Admin · M9 Go-live.
+M5 Meta onboarding ✅ · M6 Embedded billing ✅ · M7 The 5 pillars ✅ · M8 Super Admin · M9 Go-live.

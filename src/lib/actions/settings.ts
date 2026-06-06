@@ -69,8 +69,7 @@ export async function saveBudgetCap(formData: FormData) {
 /** Runs the budget guard immediately for the current user. */
 export async function checkBudgetNow() {
   const user = await requireUser();
-  const supabase = createClient();
-  const result = await evaluateBudget(supabase, user.id);
+  const result = await evaluateBudget(user.id);
   revalidatePath("/settings");
   revalidatePath("/dashboard");
   redirect(`/settings?checked=${result.status}`);

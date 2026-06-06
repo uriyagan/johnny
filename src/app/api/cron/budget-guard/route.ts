@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
   const results = [];
   for (const userId of userIds) {
-    const result = await evaluateBudget(admin, userId);
+    const result = await evaluateBudget(userId);
     results.push({ userId, ...result });
   }
 

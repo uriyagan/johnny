@@ -4,6 +4,7 @@ import type {
   AIChatResult,
   AssetAnalysis,
   ChatMessageInput,
+  FeedbackAnalysis,
   GeneratedCopy,
   IntentAction,
   ParsedIntent,
@@ -103,6 +104,52 @@ export class MockAIProvider implements AIProvider {
         "פרחים טריים לכל אירוע — משלוח מהיר עד הבית 🌸",
         "רוצים לשמח מישהו? אצלנו תמצאו זר מושלם לכל הזדמנות.",
       ],
+    };
+  }
+
+  async analyzeFeedback(text: string): Promise<FeedbackAnalysis> {
+    await delay();
+    const poor = [
+      "סקרנים",
+      "בלי כסף",
+      "לא רציני",
+      "לא קונים",
+      "מבזבזים",
+      "זבל",
+      "לא איכותי",
+    ].some((k) => text.includes(k));
+    const good = [
+      "מעולים",
+      "קונים",
+      "סגרתי",
+      "רכשו",
+      "איכותי",
+      "טובים",
+      "מצוין",
+    ].some((k) => text.includes(k));
+
+    if (poor) {
+      return {
+        summary:
+          "הלידים פחות איכותיים — מגיעים אנשים בלי כוונת קנייה אמיתית.",
+        leadQuality: "poor",
+        adjustments: [
+          "נמקד את הקהל באנשים עם כוונת קנייה גבוהה יותר",
+          "נחדד את הטקסט כדי לסנן פניות לא רלוונטיות",
+        ],
+      };
+    }
+    if (good) {
+      return {
+        summary: "הלידים איכותיים! נמשיך באותו כיוון ונרחיב בזהירות.",
+        leadQuality: "good",
+        adjustments: ["נגדיל מעט את התקציב לקהל שעובד טוב"],
+      };
+    }
+    return {
+      summary: "הלידים בסדר, אבל יש מקום לשיפור קטן באיכות הפניות.",
+      leadQuality: "mixed",
+      adjustments: ["ננסה לחדד את ההגדרות כדי לשפר את איכות הפניות"],
     };
   }
 

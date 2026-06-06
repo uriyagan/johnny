@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getAdsProvider } from "@/lib/ads";
 
 export type BudgetStatus = "no_cap" | "ok" | "warning" | "paused";
@@ -19,13 +18,12 @@ const ils = new Intl.NumberFormat("he-IL", {
 /**
  * Pillar 1 — the anti-overspending engine. Computes current spend across the
  * user's connected accounts, records it, and (if the hard cap is hit) pauses
- * active campaigns and notifies the user. Safe to call from a user-scoped
- * client (manual "check now") or the service-role client (cron).
+ * active campaigns and notifies the user. Uses the service-role client because
+ * it writes to notifications (which clients may not insert) and runs from both
+ * the manual "check now" action and the cron endpoint.
  */
-export async function evaluateBudget(
-  supabase: SupabaseClient<Database>,
-  userId: string,
-): Promise<BudgetResult> {
+export async function evaluateBudget(userId: string): Promise<BudgetResult> {
+  const supabase = createAdminClient();
   const { data: cap } = await supabase
     .from("budget_caps")
     .select("*")

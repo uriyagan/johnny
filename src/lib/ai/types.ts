@@ -43,3 +43,13 @@ export interface RejectionExplanation {
   /** Safe, policy-compliant Hebrew copy variants to try instead. */
   safeCopy: string[];
 }
+
+export type LeadQuality = "good" | "mixed" | "poor";
+
+export interface FeedbackAnalysis {
+  /** Plain-Hebrew summary of the merchant's feedback. */
+  summary: string;
+  leadQuality: LeadQuality;
+  /** Targeting adjustments to apply, phrased in Hebrew. */
+  adjustments: string[];
+}
