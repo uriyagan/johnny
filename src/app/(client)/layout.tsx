@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -10,8 +11,16 @@ export default async function ClientLayout({
   children: ReactNode;
 }) {
   const user = await requireUser();
-
   const supabase = createClient();
+
+  // Gate: send new users through onboarding first ("ג׳וני רוצה להכיר את העסק שלך").
+  const { data: business } = await supabase
+    .from("business_profiles")
+    .select("completed")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!business?.completed) redirect("/onboarding");
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name, business_name")

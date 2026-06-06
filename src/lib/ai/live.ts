@@ -215,6 +215,7 @@ export class LiveAIProvider implements AIProvider {
   async planCampaign(input: {
     brief: string;
     answers?: string;
+    brandContext?: string;
   }): Promise<CampaignPlanResult> {
     const system =
       "אתה מנהל קמפיינים מומחה לבעלי עסקים בישראל. מטרתך להפוך תיאור חופשי לקמפיין פרסום מוכן ב‑Meta. " +
@@ -229,6 +230,7 @@ export class LiveAIProvider implements AIProvider {
       "ברירת מחדל: countries=[\"IL\"], ageMin=18, ageMax=65. הטקסטים בעברית שיווקית.";
 
     const user =
+      (input.brandContext ? `פרטי העסק:\n${input.brandContext}\n\n` : "") +
       `תיאור הקמפיין: ${input.brief}` +
       (input.answers ? `\nתשובות הבהרה: ${input.answers}` : "");
 

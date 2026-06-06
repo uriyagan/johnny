@@ -162,6 +162,7 @@ export class MockAIProvider implements AIProvider {
   async planCampaign(input: {
     brief: string;
     answers?: string;
+    brandContext?: string;
   }): Promise<CampaignPlanResult> {
     await delay();
     const text = `${input.brief} ${input.answers ?? ""}`;

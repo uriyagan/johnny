@@ -39,6 +39,7 @@ export interface AIProvider {
   planCampaign(input: {
     brief: string;
     answers?: string;
+    brandContext?: string;
   }): Promise<CampaignPlanResult>;
 
   /** Generate an ad image from an English prompt. */

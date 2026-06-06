@@ -446,6 +446,60 @@ export type Database = {
         };
         Relationships: [];
       };
+      business_profiles: {
+        Row: {
+          user_id: string;
+          business_name: string | null;
+          industry: string | null;
+          description: string | null;
+          products_services: string | null;
+          target_audience: string | null;
+          brand_voice: string | null;
+          brand_colors: string | null;
+          logo_path: string | null;
+          website: string | null;
+          instagram_handle: string | null;
+          extra: Json;
+          completed: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          business_name?: string | null;
+          industry?: string | null;
+          description?: string | null;
+          products_services?: string | null;
+          target_audience?: string | null;
+          brand_voice?: string | null;
+          brand_colors?: string | null;
+          logo_path?: string | null;
+          website?: string | null;
+          instagram_handle?: string | null;
+          extra?: Json;
+          completed?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          business_name?: string | null;
+          industry?: string | null;
+          description?: string | null;
+          products_services?: string | null;
+          target_audience?: string | null;
+          brand_voice?: string | null;
+          brand_colors?: string | null;
+          logo_path?: string | null;
+          website?: string | null;
+          instagram_handle?: string | null;
+          extra?: Json;
+          completed?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       app_errors: {
         Row: {
           id: string;

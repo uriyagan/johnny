@@ -24,8 +24,37 @@ export async function buildCampaignDraft(input: {
 
   const user = await requireUser();
   try {
+    // Pull the brand memory so Johnny generates on-brand.
+    const admin = createAdminClient();
+    const { data: biz } = await admin
+      .from("business_profiles")
+      .select(
+        "business_name, industry, description, products_services, target_audience, brand_voice, brand_colors, website",
+      )
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const brandContext = biz
+      ? [
+          biz.business_name && `שם העסק: ${biz.business_name}`,
+          biz.industry && `תחום: ${biz.industry}`,
+          biz.description && `תיאור: ${biz.description}`,
+          biz.products_services && `מוצרים/שירותים: ${biz.products_services}`,
+          biz.target_audience && `קהל יעד: ${biz.target_audience}`,
+          biz.brand_voice && `שפת מותג: ${biz.brand_voice}`,
+          biz.brand_colors && `צבעי מותג: ${biz.brand_colors}`,
+          biz.website && `אתר: ${biz.website}`,
+        ]
+          .filter(Boolean)
+          .join("\n")
+      : undefined;
+
     const ai = getAIProvider();
-    const plan = await ai.planCampaign({ brief, answers: input.answers });
+    const plan = await ai.planCampaign({
+      brief,
+      answers: input.answers,
+      brandContext,
+    });
 
     if (!plan.ready || !plan.draft) {
       return { ok: true, ready: false, questions: plan.questions };
@@ -35,7 +64,6 @@ export async function buildCampaignDraft(input: {
     let imageUrl: string | null = null;
     try {
       const img = await ai.generateImage(plan.draft.imagePrompt);
-      const admin = createAdminClient();
       const path = `${user.id}/campaigns/${crypto.randomUUID()}.png`;
       const bytes = Buffer.from(img.base64, "base64");
       const { error } = await admin.storage
