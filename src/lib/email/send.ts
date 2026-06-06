@@ -25,9 +25,8 @@ function shell(bodyHtml: string): string {
   return `<!doctype html><html dir="rtl" lang="he"><body style="font-family:Arial,Helvetica,sans-serif;background:#0A0E14;color:#E7ECF3;padding:24px">
   <div style="max-width:560px;margin:0 auto;background:#11161F;border:1px solid #232C38;border-radius:16px;padding:24px">
     <div style="margin-bottom:16px">
-      <span style="display:inline-block;background:#ffffff;border-radius:10px;padding:10px 14px">
-        <img src="${LOGO_URL}" alt="Johnny" height="28" style="height:28px;display:block" />
-      </span>
+      <img src="${LOGO_URL}" alt="Johnny" width="36" height="36" style="width:36px;height:36px;vertical-align:middle" />
+      <span style="vertical-align:middle;font-weight:bold;font-size:20px;color:#34d399;margin-inline-start:8px">Johnny</span>
     </div>
     ${bodyHtml}
   </div></body></html>`;
