@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny-ps" viewBox="0 0 1000 1000">
+  <title>Johnny</title>
+  <rect width="1000" height="1000" fill="#0b4f86"/>
+  <path d="M640 220 V600 A185 185 0 0 1 270 600" fill="none" stroke="#e9eaec" stroke-width="135" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
