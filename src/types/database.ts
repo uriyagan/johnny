@@ -446,6 +446,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      recommendation_dismissals: {
+        Row: {
+          id: string;
+          user_id: string;
+          rec_key: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          rec_key: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          rec_key?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       business_profiles: {
         Row: {
           user_id: string;

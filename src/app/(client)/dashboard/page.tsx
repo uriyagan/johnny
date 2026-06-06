@@ -1,7 +1,10 @@
+import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getAdsProvider } from "@/lib/ads";
 import { startCheckin, submitFeedback } from "@/lib/actions/crm";
+import { dismissRecommendation } from "@/lib/actions/recommendations";
+import { getRecommendations } from "@/lib/recommendations";
 import { Button } from "@/components/ui/button";
 import type { FeedbackAnalysis } from "@/lib/ai/types";
 import type { MetaAdAccount, MetaCampaign } from "@/lib/ads/types";
@@ -72,6 +75,38 @@ export default async function DashboardPage() {
   const lastAnalysis = (lastCheckin?.gemini_analysis ??
     null) as unknown as FeedbackAnalysis | null;
 
+  // Budget cap (for the guided checklist) + recommendation cards.
+  const { data: capRow } = await supabase
+    .from("budget_caps")
+    .select("id")
+    .eq("user_id", user.id)
+    .is("ad_account_id", null)
+    .maybeSingle();
+  const recommendations = await getRecommendations(supabase, user.id);
+
+  const steps = [
+    { label: "השלמת פרטי העסק", done: true, href: "/onboarding", cta: "עריכה" },
+    {
+      label: "חיבור חשבון מודעות",
+      done: ids.length > 0,
+      href: "/accounts",
+      cta: "חיבור",
+    },
+    {
+      label: "הגדרת תקרת תקציב",
+      done: !!capRow,
+      href: "/settings",
+      cta: "הגדרה",
+    },
+    {
+      label: "יצירת הקמפיין הראשון",
+      done: campaigns.length > 0,
+      href: "/campaigns/new",
+      cta: "יצירה עם ג׳וני",
+    },
+  ];
+  const nextStep = steps.find((s) => !s.done);
+
   const name = profile?.full_name?.split(" ")[0] || "ברוך הבא";
   const cards = [
     { label: "חשבונות מודעות", value: String(ids.length) },
@@ -87,6 +122,95 @@ export default async function DashboardPage() {
           ? `נהל את הקמפיינים של ${profile.business_name} בקלות.`
           : "נהל את הקמפיינים שלך בקלות."}
       </p>
+
+      {/* Guided steps */}
+      <section className="mt-6 max-w-2xl rounded-2xl border border-border bg-surface p-5">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-foreground">השלבים שלך</h2>
+          {nextStep && (
+            <Link
+              href={nextStep.href}
+              className="inline-flex h-9 items-center rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white hover:bg-emerald-700"
+            >
+              המשך: {nextStep.label}
+            </Link>
+          )}
+        </div>
+        <ol className="mt-4 space-y-2">
+          {steps.map((s) => (
+            <li
+              key={s.label}
+              className="flex items-center justify-between gap-3 rounded-lg bg-surface-2 px-4 py-3"
+            >
+              <span className="flex items-center gap-3">
+                <span
+                  className={
+                    s.done
+                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs text-white"
+                      : "flex h-6 w-6 items-center justify-center rounded-full border border-border text-xs text-muted-2"
+                  }
+                >
+                  {s.done ? "✓" : ""}
+                </span>
+                <span
+                  className={s.done ? "text-muted-2 line-through" : "text-foreground"}
+                >
+                  {s.label}
+                </span>
+              </span>
+              {!s.done && (
+                <Link
+                  href={s.href}
+                  className="text-sm font-medium text-emerald-400 hover:underline"
+                >
+                  {s.cta}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* Recommendation cards */}
+      {recommendations.length > 0 && (
+        <section className="mt-6 max-w-2xl space-y-3">
+          <h2 className="font-semibold text-foreground">המלצות בשבילך</h2>
+          {recommendations.map((r) => (
+            <div
+              key={r.key}
+              className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4"
+            >
+              <p className="font-medium text-foreground">{r.title}</p>
+              <p className="mt-1 text-sm text-muted">{r.body}</p>
+              <div className="mt-3 flex items-center gap-2">
+                {r.external ? (
+                  <a
+                    href={r.actionHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-9 items-center rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white hover:bg-emerald-700"
+                  >
+                    {r.actionLabel}
+                  </a>
+                ) : (
+                  <Link
+                    href={r.actionHref}
+                    className="inline-flex h-9 items-center rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white hover:bg-emerald-700"
+                  >
+                    {r.actionLabel}
+                  </Link>
+                )}
+                <form action={dismissRecommendation}>
+                  <input type="hidden" name="rec_key" value={r.key} />
+                  <Button type="submit" variant="ghost" size="sm">
+                    התעלם
+                  </Button>
+                </form>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (
