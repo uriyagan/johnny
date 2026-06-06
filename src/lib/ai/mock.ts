@@ -3,7 +3,9 @@ import type { AIProvider } from "./provider";
 import type {
   AIChatResult,
   AssetAnalysis,
+  CampaignAnalysis,
   CampaignPlanResult,
+  CampaignSummary,
   ChatMessageInput,
   FeedbackAnalysis,
   GeneratedCopy,
@@ -193,6 +195,28 @@ export class MockAIProvider implements AIProvider {
   async generateImage(): Promise<GeneratedImage> {
     await delay();
     return { base64: PLACEHOLDER_PNG, mimeType: "image/png" };
+  }
+
+  async analyzeCampaigns(
+    campaigns: CampaignSummary[],
+  ): Promise<CampaignAnalysis> {
+    await delay();
+    if (campaigns.length === 0) {
+      return {
+        summary: "אין עדיין קמפיינים לניתוח. אפשר ליצור קמפיין חדש עם ג׳וני.",
+        insights: [],
+        recommendations: [],
+      };
+    }
+    const active = campaigns.filter((c) => c.status === "active").length;
+    return {
+      summary: `יש לך ${campaigns.length} קמפיינים, מתוכם ${active} פעילים.`,
+      insights: ["חלק מהקמפיינים מביאים תוצאות טובות יותר מאחרים."],
+      recommendations: [
+        "כדאי להגדיל מעט תקציב לקמפיין המצליח",
+        "לשקול לעצור קמפיין שלא מביא תוצאות",
+      ],
+    };
   }
 
   private parse(text: string): ParsedIntent {

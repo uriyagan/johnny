@@ -1,7 +1,9 @@
 import type {
   AIChatResult,
   AssetAnalysis,
+  CampaignAnalysis,
   CampaignPlanResult,
+  CampaignSummary,
   ChatMessageInput,
   FeedbackAnalysis,
   GeneratedCopy,
@@ -44,4 +46,7 @@ export interface AIProvider {
 
   /** Generate an ad image from an English prompt. */
   generateImage(prompt: string): Promise<GeneratedImage>;
+
+  /** Review existing campaigns and return plain-Hebrew insights + recommendations. */
+  analyzeCampaigns(campaigns: CampaignSummary[]): Promise<CampaignAnalysis>;
 }

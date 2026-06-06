@@ -4,8 +4,10 @@ import type { AIProvider } from "./provider";
 import type {
   AIChatResult,
   AssetAnalysis,
+  CampaignAnalysis,
   CampaignDraft,
   CampaignPlanResult,
+  CampaignSummary,
   ChatMessageInput,
   FeedbackAnalysis,
   GeneratedCopy,
@@ -249,6 +251,42 @@ export class LiveAIProvider implements AIProvider {
       };
     }
     return { ready: true, questions: [], draft: parsed.draft as CampaignDraft };
+  }
+
+  async analyzeCampaigns(
+    campaigns: CampaignSummary[],
+  ): Promise<CampaignAnalysis> {
+    if (campaigns.length === 0) {
+      return {
+        summary: "אין עדיין קמפיינים לניתוח. אפשר ליצור קמפיין חדש עם ג׳וני.",
+        insights: [],
+        recommendations: [],
+      };
+    }
+
+    const table = campaigns
+      .map(
+        (c) =>
+          `- ${c.name} | סטטוס: ${c.status} | מטרה: ${c.objective} | הוצאה: ₪${c.spend} | תוצאות: ${c.results} | חשיפה: ${c.reach}`,
+      )
+      .join("\n");
+
+    const text = await this.generate(
+      "אתה מנהל קמפיינים מומחה. נתח את ביצועי הקמפיינים בעברית פשוטה לבעל עסק לא טכני. " +
+        "אל תשתמש במונחים טכניים. החזר JSON בלבד: " +
+        '{"summary": string, "insights": string[], "recommendations": string[]}.',
+      [{ role: "user", parts: [{ text: `הקמפיינים:\n${table}` }] }],
+    );
+    const p = parseJson(text, {
+      summary: "",
+      insights: [],
+      recommendations: [],
+    });
+    return {
+      summary: String(p.summary ?? ""),
+      insights: asStringArray(p.insights),
+      recommendations: asStringArray(p.recommendations),
+    };
   }
 
   async generateImage(prompt: string): Promise<GeneratedImage> {

@@ -6,6 +6,7 @@ import { getAIProvider } from "@/lib/ai";
 import type { MetaCampaign, MetaCampaignStatus } from "@/lib/ads/types";
 import type { RejectionExplanation } from "@/lib/ai/types";
 import { pauseCampaign, resumeCampaign } from "@/lib/actions/campaigns";
+import { AnalysisPanel } from "@/components/campaigns/analysis-panel";
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -85,6 +86,8 @@ export default async function CampaignsPage() {
           + קמפיין חדש עם ג׳וני
         </Link>
       </div>
+
+      <AnalysisPanel />
 
       <ul className="mt-6 space-y-3">
         {campaigns.map((c) => (

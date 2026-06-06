@@ -80,6 +80,24 @@ export interface GeneratedImage {
   mimeType: string;
 }
 
+export interface CampaignSummary {
+  name: string;
+  status: string;
+  objective: string;
+  spend: number;
+  results: number;
+  reach: number;
+}
+
+export interface CampaignAnalysis {
+  /** Plain-Hebrew overview of how the campaigns are doing. */
+  summary: string;
+  /** What stands out (Hebrew). */
+  insights: string[];
+  /** Concrete next actions (Hebrew). */
+  recommendations: string[];
+}
+
 export type LeadQuality = "good" | "mixed" | "poor";
 
 export interface FeedbackAnalysis {
