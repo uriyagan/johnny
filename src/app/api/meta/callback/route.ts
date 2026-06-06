@@ -7,6 +7,7 @@ import { getTierLimitInfo } from "@/lib/accounts";
 import { saveMetaToken } from "@/lib/meta/connection";
 import { META_GRAPH } from "@/lib/meta/graph";
 import { LiveAdsProvider } from "@/lib/ads/live";
+import { logServerError } from "@/lib/log-error";
 
 const STATE_COOKIE = "meta_oauth_state";
 
@@ -110,6 +111,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(`${origin}/accounts?meta=connected`);
   } catch (e) {
+    await logServerError(e, { route: "/api/meta/callback", userId: user.id });
     const msg = e instanceof Error ? e.message : "unknown";
     return NextResponse.redirect(
       `${origin}/accounts?meta=error&reason=${encodeURIComponent(msg)}`,

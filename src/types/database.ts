@@ -446,6 +446,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      app_errors: {
+        Row: {
+          id: string;
+          source: Database["public"]["Enums"]["error_source"];
+          severity: Database["public"]["Enums"]["error_severity"];
+          message: string;
+          stack: string | null;
+          route: string | null;
+          user_id: string | null;
+          user_agent: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          source?: Database["public"]["Enums"]["error_source"];
+          severity?: Database["public"]["Enums"]["error_severity"];
+          message: string;
+          stack?: string | null;
+          route?: string | null;
+          user_id?: string | null;
+          user_agent?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          source?: Database["public"]["Enums"]["error_source"];
+          severity?: Database["public"]["Enums"]["error_severity"];
+          message?: string;
+          stack?: string | null;
+          route?: string | null;
+          user_id?: string | null;
+          user_agent?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       admin_audit_log: {
         Row: {
           id: string;
@@ -582,6 +621,8 @@ export type Database = {
     };
     Enums: {
       user_role: "client" | "admin";
+      error_source: "client" | "server";
+      error_severity: "warning" | "error" | "fatal";
       subscription_tier: "tier_1" | "tier_2" | "tier_3" | "tier_4";
       subscription_status:
         | "trialing"
