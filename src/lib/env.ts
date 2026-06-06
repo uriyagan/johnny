@@ -13,6 +13,10 @@ const clientSchema = z.object({
     .enum(["true", "false"])
     .default("true")
     .transform((v) => v === "true"),
+  // Optional per-provider overrides (fall back to NEXT_PUBLIC_USE_MOCKS).
+  NEXT_PUBLIC_USE_MOCKS_AI: z.enum(["true", "false"]).optional(),
+  NEXT_PUBLIC_USE_MOCKS_ADS: z.enum(["true", "false"]).optional(),
+  NEXT_PUBLIC_USE_MOCKS_BILLING: z.enum(["true", "false"]).optional(),
 });
 
 const serverSchema = z.object({
@@ -36,6 +40,10 @@ export const clientEnv = clientSchema.parse({
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   NEXT_PUBLIC_USE_MOCKS: process.env.NEXT_PUBLIC_USE_MOCKS,
+  NEXT_PUBLIC_USE_MOCKS_AI: process.env.NEXT_PUBLIC_USE_MOCKS_AI || undefined,
+  NEXT_PUBLIC_USE_MOCKS_ADS: process.env.NEXT_PUBLIC_USE_MOCKS_ADS || undefined,
+  NEXT_PUBLIC_USE_MOCKS_BILLING:
+    process.env.NEXT_PUBLIC_USE_MOCKS_BILLING || undefined,
 });
 
 let _serverEnv: z.infer<typeof serverSchema> | null = null;
