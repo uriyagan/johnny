@@ -6,6 +6,7 @@ import { getTrigger } from "@/lib/email/registry";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { EmailEditor } from "@/components/admin/email/email-editor";
 
 export default async function EditEmailPage({
   params,
@@ -59,14 +60,11 @@ export default async function EditEmailPage({
             <Input id="subject" name="subject" defaultValue={subject} required />
           </div>
           <div>
-            <Label htmlFor="body_html">תוכן המייל (HTML)</Label>
-            <textarea
-              id="body_html"
+            <Label>תוכן המייל</Label>
+            <EmailEditor
               name="body_html"
-              rows={12}
               defaultValue={bodyHtml}
-              dir="ltr"
-              className="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 font-mono text-sm text-foreground focus:border-emerald-500 focus:outline-none"
+              mergeTags={trigger.mergeTags.map((t) => t.key)}
             />
           </div>
           <Button type="submit">שמירה</Button>
