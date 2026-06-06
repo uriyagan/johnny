@@ -23,7 +23,7 @@ export default async function ClientLayout({
   return (
     <div className="flex min-h-screen">
       <Sidebar displayName={displayName} email={user.email ?? ""} />
-      <main className="flex-1 overflow-y-auto px-8 py-8">{children}</main>
+      <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
     </div>
   );
 }
