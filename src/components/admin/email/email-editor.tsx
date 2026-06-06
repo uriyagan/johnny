@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
+import { wrapEmailShell } from "@/lib/email/shell";
 
 function ToolbarButton({
   active,
@@ -102,6 +103,7 @@ export function EmailEditor({
   mergeTags: string[];
 }) {
   const [html, setHtml] = useState(defaultValue);
+  const [showPreview, setShowPreview] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -121,10 +123,28 @@ export function EmailEditor({
 
   return (
     <div>
-      <div className="overflow-hidden rounded-lg border border-border bg-surface-2">
-        {editor && <Toolbar editor={editor} />}
-        <EditorContent editor={editor} />
+      <div className="mb-2 flex justify-end">
+        <button
+          type="button"
+          onClick={() => setShowPreview((v) => !v)}
+          className="rounded-md bg-surface-2 px-3 py-1 text-sm text-foreground hover:bg-white/10"
+        >
+          {showPreview ? "חזרה לעריכה" : "תצוגה מקדימה"}
+        </button>
       </div>
+
+      {showPreview ? (
+        <iframe
+          title="email preview"
+          srcDoc={wrapEmailShell(html)}
+          className="h-[480px] w-full rounded-lg border border-border bg-white"
+        />
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-border bg-surface-2">
+          {editor && <Toolbar editor={editor} />}
+          <EditorContent editor={editor} />
+        </div>
+      )}
 
       <div className="mt-2 flex flex-wrap items-center gap-1">
         <span className="text-xs text-muted-2">הוספת תג:</span>

@@ -2,6 +2,7 @@ import "server-only";
 import { serverEnv } from "@/lib/env";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getTrigger } from "./registry";
+import { wrapEmailShell } from "./shell";
 
 /** Replaces {{tag}} with HTML-escaped context values (missing → empty). */
 export function renderTemplate(
@@ -18,26 +19,7 @@ export function renderTemplate(
   });
 }
 
-const LOGO_URL = "https://app.askjohnny.io/email-logo.png";
-
-/** Wraps body HTML in a clean, light, RTL branded email (table layout for clients). */
-function shell(bodyHtml: string): string {
-  return `<!doctype html><html dir="rtl" lang="he"><body style="margin:0;background:#f4f6f8;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
-    <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border:1px solid #e6e9ee;border-radius:16px;overflow:hidden">
-      <tr><td align="center" style="padding:28px 24px 4px">
-        <img src="${LOGO_URL}" width="56" height="56" alt="Johnny" style="display:block;border-radius:14px" />
-      </td></tr>
-      <tr><td dir="rtl" style="padding:12px 28px 24px;color:#1f2733;font-size:15px;line-height:1.7">
-        ${bodyHtml}
-      </td></tr>
-      <tr><td align="center" style="padding:16px 24px 22px;border-top:1px solid #eef1f4;color:#9aa7b4;font-size:12px">
-        נשלח על ידי Johnny · ניהול קמפיינים אוטומטי
-      </td></tr>
-    </table>
-  </td></tr></table>
-  </body></html>`;
-}
+const shell = wrapEmailShell;
 
 /** Loads the effective template for a trigger (DB override or registry default). */
 async function loadTemplate(triggerKey: string) {
