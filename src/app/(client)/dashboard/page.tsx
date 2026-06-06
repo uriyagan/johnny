@@ -17,22 +17,30 @@ export default async function DashboardPage() {
     .eq("id", user.id)
     .single();
 
-  // Pulled from the active Ads provider (mock until live tokens are connected).
-  const ads = getAdsProvider();
-  const accounts = await ads.listAccounts();
-  const campaigns = (
-    await Promise.all(accounts.map((a) => ads.listCampaigns(a.id)))
-  ).flat();
+  // Stats are derived from the user's CONNECTED accounts, enriched via the
+  // Ads provider (mock until live tokens are connected).
+  const { data: connected } = await supabase
+    .from("ad_accounts")
+    .select("external_account_id")
+    .eq("user_id", user.id);
+  const ids = (connected ?? []).map((r) => r.external_account_id);
 
+  const ads = getAdsProvider();
+  const [accountData, campaignLists] = await Promise.all([
+    Promise.all(ids.map((id) => ads.getAccount(id))),
+    Promise.all(ids.map((id) => ads.listCampaigns(id))),
+  ]);
+
+  const campaigns = campaignLists.flat();
   const activeCampaigns = campaigns.filter((c) => c.status === "active").length;
-  const spentThisMonth = accounts.reduce(
-    (sum, a) => sum + a.amountSpentThisMonth,
+  const spentThisMonth = accountData.reduce(
+    (sum, a) => sum + (a?.amountSpentThisMonth ?? 0),
     0,
   );
 
   const name = profile?.full_name?.split(" ")[0] || "ברוך הבא";
   const cards = [
-    { label: "חשבונות מודעות", value: String(accounts.length) },
+    { label: "חשבונות מודעות", value: String(ids.length) },
     { label: "קמפיינים פעילים", value: String(activeCampaigns) },
     { label: "הוצאה החודש", value: ils.format(spentThisMonth) },
   ];
