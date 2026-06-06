@@ -1,5 +1,12 @@
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { getAdsProvider } from "@/lib/ads";
+
+const ils = new Intl.NumberFormat("he-IL", {
+  style: "currency",
+  currency: "ILS",
+  maximumFractionDigits: 0,
+});
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -10,7 +17,25 @@ export default async function DashboardPage() {
     .eq("id", user.id)
     .single();
 
+  // Pulled from the active Ads provider (mock until live tokens are connected).
+  const ads = getAdsProvider();
+  const accounts = await ads.listAccounts();
+  const campaigns = (
+    await Promise.all(accounts.map((a) => ads.listCampaigns(a.id)))
+  ).flat();
+
+  const activeCampaigns = campaigns.filter((c) => c.status === "active").length;
+  const spentThisMonth = accounts.reduce(
+    (sum, a) => sum + a.amountSpentThisMonth,
+    0,
+  );
+
   const name = profile?.full_name?.split(" ")[0] || "ברוך הבא";
+  const cards = [
+    { label: "חשבונות מודעות", value: String(accounts.length) },
+    { label: "קמפיינים פעילים", value: String(activeCampaigns) },
+    { label: "הוצאה החודש", value: ils.format(spentThisMonth) },
+  ];
 
   return (
     <div>
@@ -22,11 +47,7 @@ export default async function DashboardPage() {
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          { label: "חשבונות מודעות", value: "0" },
-          { label: "קמפיינים פעילים", value: "0" },
-          { label: "הוצאה החודש", value: "₪0" },
-        ].map((card) => (
+        {cards.map((card) => (
           <div
             key={card.label}
             className="rounded-2xl border border-gray-200 bg-white p-5"

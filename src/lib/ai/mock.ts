@@ -1,0 +1,93 @@
+import { serverEnv } from "@/lib/env";
+import type { AIProvider } from "./provider";
+import type {
+  AIChatResult,
+  AssetAnalysis,
+  ChatMessageInput,
+  GeneratedCopy,
+  IntentAction,
+  ParsedIntent,
+} from "./types";
+
+const delay = (ms = 350) => new Promise((r) => setTimeout(r, ms));
+
+/** Hebrew keyword heuristics → intent. Mirrors the live model's output shape. */
+const RULES: { action: IntentAction; keywords: string[] }[] = [
+  { action: "run_diagnostic", keywords: ["לא עובד", "תקוע", "בעיה", "לא רץ"] },
+  { action: "get_spend", keywords: ["כמה", "הוצאתי", "עלות", "כסף", "תקציב נוצל"] },
+  { action: "change_budget", keywords: ["תקציב", "להעלות", "להוריד", "פחות", "יותר כסף"] },
+  { action: "adjust_targeting", keywords: ["מי רואה", "קהל", "מתאים", "לקוחות", "סקרנים"] },
+  { action: "pause_campaign", keywords: ["לעצור", "עצור", "להפסיק", "תפסיק"] },
+  { action: "resume_campaign", keywords: ["להפעיל", "תפעיל", "להמשיך", "תחזיר"] },
+];
+
+const REPLIES: Record<IntentAction, string> = {
+  run_diagnostic:
+    "אני בודק עכשיו את הקמפיין שלך כדי לראות מה קורה. תכף אחזור עם תשובה ברורה 🙂",
+  get_spend: "רגע אחד, אני בודק כמה הוצאת עד עכשיו ומראה לך בדיוק.",
+  adjust_targeting:
+    "הבנתי — נדאג שהמודעות יגיעו לאנשים הנכונים יותר. אני מעדכן את זה.",
+  change_budget: "אין בעיה, אני מעדכן את התקציב בשבילך כרגע.",
+  pause_campaign: "סבבה, אני עוצר את הקמפיין. תוכל להפעיל אותו שוב מתי שתרצה.",
+  resume_campaign: "מעולה, אני מפעיל את הקמפיין שוב 👍",
+  general_help: "אני כאן בשבילך! ספר לי במילים שלך מה תרצה לעשות.",
+  unknown: "לא בטוח שהבנתי לגמרי — אפשר להסביר לי שוב במילים פשוטות?",
+};
+
+export class MockAIProvider implements AIProvider {
+  readonly models: { text: string; image: string };
+
+  constructor() {
+    const env = serverEnv();
+    this.models = { text: env.GEMINI_TEXT_MODEL, image: env.GEMINI_IMAGE_MODEL };
+  }
+
+  async chat(messages: ChatMessageInput[]): Promise<AIChatResult> {
+    await delay();
+    const last = [...messages].reverse().find((m) => m.role === "user");
+    const text = last?.content ?? "";
+    const intent = this.parse(text);
+    return { reply: REPLIES[intent.action], intent };
+  }
+
+  async analyzeAsset(input: {
+    filename: string;
+    mimeType: string;
+  }): Promise<AssetAnalysis> {
+    await delay();
+    return {
+      attributes: ["תאורה טבעית", "צבעים חמים", "מוצר במרכז התמונה"],
+      suggestions: [
+        "כדאי להוסיף טקסט קצר עם הצעת ערך",
+        "אפשר לחתוך את התמונה לפורמט מרובע שמתאים לפיד",
+      ],
+    };
+  }
+
+  async generateCopy(input: {
+    product: string;
+    tone?: string;
+  }): Promise<GeneratedCopy> {
+    await delay();
+    const p = input.product || "המוצר שלך";
+    return {
+      variants: [
+        `${p} שכולם מדברים עליו — הזמינו עכשיו וקבלו משלוח מהיר! 🌟`,
+        `רוצים את ${p}? הגיע הזמן לפנק את עצמכם. לחצו ותגלו.`,
+        `${p} במחיר שלא תמצאו במקום אחר. כמות מוגבלת!`,
+      ],
+    };
+  }
+
+  private parse(text: string): ParsedIntent {
+    for (const rule of RULES) {
+      if (rule.keywords.some((k) => text.includes(k))) {
+        return { action: rule.action, parameters: {}, confidence: 0.8 };
+      }
+    }
+    if (text.trim().length > 0) {
+      return { action: "general_help", parameters: {}, confidence: 0.4 };
+    }
+    return { action: "unknown", parameters: {}, confidence: 0.2 };
+  }
+}
