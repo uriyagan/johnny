@@ -18,11 +18,17 @@ export function renderTemplate(
   });
 }
 
+const LOGO_URL = "https://app.askjohnny.io/logo.png";
+
 /** Wraps body HTML in a simple RTL branded shell. */
 function shell(bodyHtml: string): string {
   return `<!doctype html><html dir="rtl" lang="he"><body style="font-family:Arial,Helvetica,sans-serif;background:#0A0E14;color:#E7ECF3;padding:24px">
   <div style="max-width:560px;margin:0 auto;background:#11161F;border:1px solid #232C38;border-radius:16px;padding:24px">
-    <div style="font-weight:bold;font-size:20px;color:#34d399;margin-bottom:12px">Johnny</div>
+    <div style="margin-bottom:16px">
+      <span style="display:inline-block;background:#ffffff;border-radius:10px;padding:10px 14px">
+        <img src="${LOGO_URL}" alt="Johnny" height="28" style="height:28px;display:block" />
+      </span>
+    </div>
     ${bodyHtml}
   </div></body></html>`;
 }
