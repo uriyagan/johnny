@@ -9,6 +9,7 @@ const ITEMS = [
   { href: "/admin/tenants", label: "לקוחות" },
   { href: "/admin/subscriptions", label: "מנויים" },
   { href: "/admin/tickets", label: "טיקטים" },
+  { href: "/admin/usage", label: "עלויות" },
   { href: "/admin/kill-switches", label: "מתגי חירום" },
   { href: "/admin/errors", label: "שגיאות" },
 ];

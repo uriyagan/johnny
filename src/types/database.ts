@@ -446,6 +446,42 @@ export type Database = {
         };
         Relationships: [];
       };
+      api_usage: {
+        Row: {
+          id: string;
+          provider: Database["public"]["Enums"]["usage_provider"];
+          operation: string;
+          user_id: string | null;
+          tokens_in: number;
+          tokens_out: number;
+          cost_usd: number;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider: Database["public"]["Enums"]["usage_provider"];
+          operation: string;
+          user_id?: string | null;
+          tokens_in?: number;
+          tokens_out?: number;
+          cost_usd?: number;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider?: Database["public"]["Enums"]["usage_provider"];
+          operation?: string;
+          user_id?: string | null;
+          tokens_in?: number;
+          tokens_out?: number;
+          cost_usd?: number;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       tickets: {
         Row: {
           id: string;
@@ -753,6 +789,7 @@ export type Database = {
       error_source: "client" | "server";
       error_severity: "warning" | "error" | "fatal";
       ticket_status: "open" | "answered" | "closed";
+      usage_provider: "gemini" | "meta" | "resend" | "stripe";
       subscription_tier: "tier_1" | "tier_2" | "tier_3" | "tier_4";
       subscription_status:
         | "trialing"

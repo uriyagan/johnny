@@ -53,6 +53,7 @@ export class LiveAIProvider implements AIProvider {
   private async generate(
     system: string,
     contents: GeminiContent[],
+    operation = "text",
     temperature = 0.7,
   ): Promise<string> {
     const { GEMINI_API_KEY } = serverEnv();
@@ -79,6 +80,21 @@ export class LiveAIProvider implements AIProvider {
     }
 
     const data = await res.json();
+
+    // Track usage + estimated cost (best-effort).
+    const um = data?.usageMetadata ?? {};
+    const tokensIn = um.promptTokenCount ?? 0;
+    const tokensOut = um.candidatesTokenCount ?? 0;
+    const { logUsage, estimateGeminiCost } = await import("@/lib/usage");
+    await logUsage({
+      provider: "gemini",
+      operation,
+      tokensIn,
+      tokensOut,
+      costUsd: estimateGeminiCost(this.models.text, tokensIn, tokensOut),
+      metadata: { model: this.models.text },
+    });
+
     const parts = data?.candidates?.[0]?.content?.parts ?? [];
     return parts.map((p: { text?: string }) => p.text ?? "").join("");
   }
@@ -101,7 +117,7 @@ export class LiveAIProvider implements AIProvider {
       contents.push({ role: "user", parts: [{ text: "שלום" }] });
     }
 
-    const text = await this.generate(system, contents);
+    const text = await this.generate(system, contents, "chat");
     const parsed = parseJson(text, {
       reply: "מצטער, לא הצלחתי להבין. אפשר לנסות שוב במילים אחרות?",
       action: "unknown" as IntentAction,
@@ -144,6 +160,7 @@ export class LiveAIProvider implements AIProvider {
     const text = await this.generate(
       "אתה מומחה ליצירת מודעות ויזואליות. החזר JSON בלבד.",
       [{ role: "user", parts: [{ text: user }] }],
+      "asset_analysis",
     );
     const p = parseJson(text, { attributes: [], suggestions: [] });
     return {
@@ -163,6 +180,7 @@ export class LiveAIProvider implements AIProvider {
     const text = await this.generate(
       "אתה קופירייטר מומחה לעברית שיווקית. החזר JSON בלבד.",
       [{ role: "user", parts: [{ text: user }] }],
+      "copy",
     );
     const p = parseJson(text, { variants: [] });
     return { variants: asStringArray(p.variants) };
@@ -176,6 +194,7 @@ export class LiveAIProvider implements AIProvider {
     const text = await this.generate(
       "אתה מומחה למדיניות פרסום של Meta. החזר JSON בלבד.",
       [{ role: "user", parts: [{ text: user }] }],
+      "rejection",
     );
     const p = parseJson(text, {
       reasonHe: "המודעה נדחתה. כדאי לשנות מעט את הנוסח ולשלוח שוב.",
@@ -196,6 +215,7 @@ export class LiveAIProvider implements AIProvider {
     const out = await this.generate(
       "אתה מנהל קמפיינים מומחה. החזר JSON בלבד.",
       [{ role: "user", parts: [{ text: user }] }],
+      "feedback",
     );
     const p = parseJson(out, {
       summary: "",
@@ -236,9 +256,11 @@ export class LiveAIProvider implements AIProvider {
       `תיאור הקמפיין: ${input.brief}` +
       (input.answers ? `\nתשובות הבהרה: ${input.answers}` : "");
 
-    const text = await this.generate(system, [
-      { role: "user", parts: [{ text: user }] },
-    ]);
+    const text = await this.generate(
+      system,
+      [{ role: "user", parts: [{ text: user }] }],
+      "campaign_plan",
+    );
     const parsed = parseJson<CampaignPlanResult>(text, {
       ready: false,
       questions: ["תוכל לפרט מה תרצה לפרסם, מה התקציב היומי, ולאן להפנות את הגולשים?"],
@@ -276,6 +298,7 @@ export class LiveAIProvider implements AIProvider {
         "אל תשתמש במונחים טכניים. החזר JSON בלבד: " +
         '{"summary": string, "insights": string[], "recommendations": string[]}.',
       [{ role: "user", parts: [{ text: `הקמפיינים:\n${table}` }] }],
+      "campaign_analysis",
     );
     const p = parseJson(text, {
       summary: "",
@@ -306,6 +329,15 @@ export class LiveAIProvider implements AIProvider {
     if (!res.ok) throw new Error(`Gemini image ${res.status}: ${await res.text()}`);
 
     const data = await res.json();
+
+    const { logUsage, estimateGeminiCost } = await import("@/lib/usage");
+    await logUsage({
+      provider: "gemini",
+      operation: "image",
+      costUsd: estimateGeminiCost(GEMINI_IMAGE_MODEL, 0, 0, 1),
+      metadata: { model: GEMINI_IMAGE_MODEL },
+    });
+
     const parts = data?.candidates?.[0]?.content?.parts ?? [];
     const img = parts.find(
       (p: { inlineData?: { data: string; mimeType: string } }) => p.inlineData,
