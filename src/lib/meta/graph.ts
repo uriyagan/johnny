@@ -3,15 +3,12 @@ import "server-only";
 export const META_GRAPH_VERSION = "v21.0";
 export const META_GRAPH = `https://graph.facebook.com/${META_GRAPH_VERSION}`;
 
-/** OAuth scopes requested during the Meta connect flow. */
-export const META_SCOPES = [
-  "ads_read",
-  "ads_management",
-  "business_management",
-  "pages_show_list",
-  "pages_read_engagement",
-  "pages_manage_ads",
-].join(",");
+/**
+ * OAuth scopes for the Meta connect flow. Kept to the ads essentials — page /
+ * business-management scopes require App Review and aren't needed to read &
+ * manage ad accounts during testing.
+ */
+export const META_SCOPES = ["ads_read", "ads_management"].join(",");
 
 type Params = Record<string, string | number | undefined>;
 
