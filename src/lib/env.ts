@@ -27,6 +27,7 @@ const serverSchema = z.object({
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().default("Johnny <noreply@askjohnny.io>"),
   META_APP_ID: z.string().optional(),
   META_APP_SECRET: z.string().optional(),
   /** Token echoed back during Meta webhook subscription verification. */

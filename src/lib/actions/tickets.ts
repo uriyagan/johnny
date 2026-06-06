@@ -73,10 +73,29 @@ export async function adminReply(formData: FormData) {
     from_admin: true,
     body,
   });
-  await supabase
+  const { data: ticket } = await supabase
     .from("tickets")
     .update({ status: "answered" })
-    .eq("id", ticketId);
+    .eq("id", ticketId)
+    .select("user_id, subject")
+    .maybeSingle();
+
+  // Notify the client by email (best-effort).
+  if (ticket) {
+    try {
+      const { getRecipient } = await import("@/lib/email/recipient");
+      const { sendAutomation } = await import("@/lib/email/send");
+      const r = await getRecipient(ticket.user_id);
+      if (r.email) {
+        await sendAutomation("ticket_answered", r.email, {
+          ...r.ctx,
+          "ticket.subject": ticket.subject,
+        });
+      }
+    } catch {
+      /* email is best-effort */
+    }
+  }
 
   revalidatePath(`/admin/tickets/${ticketId}`);
 }

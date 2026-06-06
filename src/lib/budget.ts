@@ -83,6 +83,9 @@ export async function evaluateBudget(userId: string): Promise<BudgetResult> {
         title: "הקמפיינים הושהו",
         body: `הגעת לתקרת התקציב החודשית (${ils.format(cap.monthly_cap_ils)}). השהינו את הקמפיינים כדי להגן עליך מהוצאה מיותרת.`,
       });
+      await emailUser(userId, "budget_paused", {
+        "budget.cap": ils.format(cap.monthly_cap_ils),
+      });
     }
     return { status: "paused", spend, cap: cap.monthly_cap_ils };
   }
@@ -105,9 +108,29 @@ export async function evaluateBudget(userId: string): Promise<BudgetResult> {
         title: "מתקרבים לתקרת התקציב",
         body: `ניצלת ${ils.format(spend)} מתוך ${ils.format(cap.monthly_cap_ils)} החודש.`,
       });
+      await emailUser(userId, "budget_warning", {
+        "budget.spent": ils.format(spend),
+        "budget.cap": ils.format(cap.monthly_cap_ils),
+      });
     }
     return { status: "warning", spend, cap: cap.monthly_cap_ils };
   }
 
   return { status: "ok", spend, cap: cap.monthly_cap_ils };
+}
+
+/** Best-effort transactional email to a user for a budget event. */
+async function emailUser(
+  userId: string,
+  triggerKey: string,
+  extra: Record<string, string>,
+): Promise<void> {
+  try {
+    const { getRecipient } = await import("@/lib/email/recipient");
+    const { sendAutomation } = await import("@/lib/email/send");
+    const r = await getRecipient(userId);
+    if (r.email) await sendAutomation(triggerKey, r.email, { ...r.ctx, ...extra });
+  } catch {
+    /* email is best-effort */
+  }
 }

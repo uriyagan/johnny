@@ -446,6 +446,63 @@ export type Database = {
         };
         Relationships: [];
       };
+      email_automations: {
+        Row: {
+          id: string;
+          trigger_key: string;
+          enabled: boolean;
+          subject: string;
+          body_html: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          trigger_key: string;
+          enabled?: boolean;
+          subject: string;
+          body_html: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          trigger_key?: string;
+          enabled?: boolean;
+          subject?: string;
+          body_html?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      email_send_log: {
+        Row: {
+          id: string;
+          trigger_key: string;
+          recipient: string;
+          status: string;
+          error: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          trigger_key: string;
+          recipient: string;
+          status: string;
+          error?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          trigger_key?: string;
+          recipient?: string;
+          status?: string;
+          error?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       api_usage: {
         Row: {
           id: string;
