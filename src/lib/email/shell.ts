@@ -2,7 +2,6 @@
  * Branded email shell — shared by the live sender AND the admin live preview.
  * Pure (no server-only / env) so it can run on the client for previews.
  */
-const LOGO_URL = "https://app.askjohnny.io/email-logo.png";
 const ACCENT = "#10b981";
 
 export function wrapEmailShell(bodyHtml: string): string {
@@ -10,10 +9,7 @@ export function wrapEmailShell(bodyHtml: string): string {
   <body style="margin:0;background:#f4f6f8;padding:24px 12px;font-family:Heebo,Arial,Helvetica,sans-serif">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border:1px solid #e6e9ee;border-radius:16px;overflow:hidden">
-        <tr><td align="center" style="padding:28px 24px 4px">
-          <img src="${LOGO_URL}" width="56" height="56" alt="Johnny" style="display:block;border-radius:14px" />
-        </td></tr>
-        <tr><td dir="rtl" style="padding:12px 28px 24px;color:#1f2733;font-size:15px;line-height:1.7">
+        <tr><td dir="rtl" style="padding:28px 28px 24px;color:#1f2733;font-size:15px;line-height:1.7">
           <style>
             .jb h1,.jb h2,.jb h3{color:#0f172a;margin:0 0 12px;font-weight:700;line-height:1.3}
             .jb h1{font-size:24px}.jb h2{font-size:20px}.jb h3{font-size:17px}
