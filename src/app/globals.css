@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  /* Hebrew RTL is set on <html dir="rtl"> in layout.tsx */
+  -webkit-text-size-adjust: 100%;
+}
