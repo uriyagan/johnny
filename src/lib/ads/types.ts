@@ -35,6 +35,25 @@ export interface MetaCampaign {
   createdAt: string;
 }
 
+export interface MetaPage {
+  id: string;
+  name: string;
+}
+
+export interface CreateCampaignInput {
+  accountId: string; // act_...
+  pageId: string;
+  linkUrl: string;
+  name: string;
+  dailyBudgetIls: number;
+  headline: string;
+  primaryText: string;
+  description: string;
+  callToAction: string;
+  imageUrl: string | null;
+  audience: { countries: string[]; ageMin: number; ageMax: number };
+}
+
 export interface MetaInsights {
   campaignId: string;
   spend: number;

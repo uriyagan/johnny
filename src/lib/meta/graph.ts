@@ -8,7 +8,11 @@ export const META_GRAPH = `https://graph.facebook.com/${META_GRAPH_VERSION}`;
  * business-management scopes require App Review and aren't needed to read &
  * manage ad accounts during testing.
  */
-export const META_SCOPES = ["ads_read", "ads_management"].join(",");
+export const META_SCOPES = [
+  "ads_read",
+  "ads_management",
+  "pages_show_list", // needed to attach a Page to ad creatives
+].join(",");
 
 type Params = Record<string, string | number | undefined>;
 

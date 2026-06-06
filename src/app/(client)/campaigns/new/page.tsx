@@ -2,12 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   buildCampaignDraft,
   type BuildResult,
 } from "@/lib/actions/campaign-builder";
+import {
+  listMetaPages,
+  publishCampaign,
+} from "@/lib/actions/publish-campaign";
 import type { CampaignDraft } from "@/lib/ai/types";
+import type { MetaPage } from "@/lib/ads/types";
 import { Button } from "@/components/ui/button";
 
 const CTA_LABEL: Record<string, string> = {
@@ -32,6 +37,40 @@ export default function NewCampaignPage() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
+
+  // Publishing
+  const [pages, setPages] = useState<MetaPage[]>([]);
+  const [pageId, setPageId] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [publishing, setPublishing] = useState(false);
+  const [publishedId, setPublishedId] = useState<string | null>(null);
+  const [publishError, setPublishError] = useState<string | null>(null);
+
+  // Load the user's Pages once a draft is ready.
+  useEffect(() => {
+    if (!draft) return;
+    let active = true;
+    listMetaPages().then((p) => {
+      if (active) {
+        setPages(p);
+        setPageId((cur) => cur || p[0]?.id || "");
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [draft]);
+
+  function publish() {
+    if (publishing || !draft) return;
+    setPublishError(null);
+    setPublishing(true);
+    publishCampaign({ draft, imageUrl, pageId, linkUrl }).then((res) => {
+      setPublishing(false);
+      if (res.ok) setPublishedId(res.campaignId);
+      else setPublishError(res.error);
+    });
+  }
 
   function run(extraAnswers?: string) {
     setError(null);
@@ -150,14 +189,69 @@ export default function NewCampaignPage() {
             <Info label="תחומי עניין" value={draft.audience.interests} />
           </dl>
 
-          <div className="mt-5 flex gap-2">
-            <Button disabled title="שלב הפרסום ל‑Meta ייכנס בקרוב">
-              פרסום ל‑Meta (בקרוב)
-            </Button>
-            <Button variant="ghost" onClick={() => run()} disabled={pending}>
-              צור גרסה אחרת
-            </Button>
-          </div>
+          {publishedId ? (
+            <div className="mt-5 rounded-xl bg-emerald-500/10 p-4 text-sm text-emerald-200">
+              <p className="font-medium">הקמפיין נוצר ב‑Meta והוא במצב מושהה ⏸️</p>
+              <p className="mt-1">
+                בדקו אותו ב‑
+                <Link href="/campaigns" className="underline">
+                  עמוד הקמפיינים
+                </Link>{" "}
+                והפעילו כשתהיו מוכנים.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-5 space-y-3 border-t border-border pt-4">
+              <p className="text-sm font-medium text-foreground">פרסום ל‑Meta</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs text-muted-2">
+                    עמוד הפייסבוק
+                  </label>
+                  <select
+                    value={pageId}
+                    onChange={(e) => setPageId(e.target.value)}
+                    className="h-11 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-foreground focus:border-emerald-500 focus:outline-none"
+                  >
+                    {pages.length === 0 && <option value="">לא נמצאו עמודים</option>}
+                    {pages.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-muted-2">
+                    כתובת יעד (לאן הגולש יגיע)
+                  </label>
+                  <input
+                    value={linkUrl}
+                    onChange={(e) => setLinkUrl(e.target.value)}
+                    dir="ltr"
+                    placeholder="https://your-site.com"
+                    className="h-11 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-foreground focus:border-emerald-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {publishError && (
+                <p className="text-sm text-red-400">{publishError}</p>
+              )}
+
+              <div className="flex gap-2">
+                <Button onClick={publish} disabled={publishing || !pageId}>
+                  {publishing ? "מפרסם…" : "פרסום ל‑Meta (מושהה)"}
+                </Button>
+                <Button variant="ghost" onClick={() => run()} disabled={pending}>
+                  צור גרסה אחרת
+                </Button>
+              </div>
+              <p className="text-xs text-muted-2">
+                הקמפיין ייווצר במצב מושהה — לא יתחיל לרוץ עד שתפעילו אותו.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

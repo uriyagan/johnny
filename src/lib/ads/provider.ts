@@ -1,4 +1,10 @@
-import type { MetaAdAccount, MetaCampaign, MetaInsights } from "./types";
+import type {
+  CreateCampaignInput,
+  MetaAdAccount,
+  MetaCampaign,
+  MetaInsights,
+  MetaPage,
+} from "./types";
 
 /**
  * Abstraction over the Meta Ads API. The mock implementation backs the UI
@@ -18,4 +24,10 @@ export interface AdsProvider {
   resumeCampaign(campaignId: string): Promise<MetaCampaign>;
 
   getInsights(campaignId: string): Promise<MetaInsights>;
+
+  /** Facebook Pages the user manages (for ad creatives). */
+  listPages(): Promise<MetaPage[]>;
+
+  /** Creates a full campaign (campaign → ad set → creative → ad), PAUSED. */
+  createCampaign(input: CreateCampaignInput): Promise<{ campaignId: string }>;
 }

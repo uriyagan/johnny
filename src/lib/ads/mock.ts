@@ -1,5 +1,11 @@
 import type { AdsProvider } from "./provider";
-import type { MetaAdAccount, MetaCampaign, MetaInsights } from "./types";
+import type {
+  CreateCampaignInput,
+  MetaAdAccount,
+  MetaCampaign,
+  MetaInsights,
+  MetaPage,
+} from "./types";
 
 /** Simulated network latency so loading states are exercised in the UI. */
 const delay = (ms = 250) => new Promise((r) => setTimeout(r, ms));
@@ -139,6 +145,36 @@ export class MockAdsProvider implements AdsProvider {
       costPerResult: c.results > 0 ? +(c.spend / c.results).toFixed(2) : 0,
       period: { start: "2026-05-01", end: "2026-05-31" },
     };
+  }
+
+  async listPages(): Promise<MetaPage[]> {
+    await delay();
+    return [
+      { id: "page_001", name: "הדף של חנות הפרחים" },
+      { id: "page_101", name: "מסעדת הזית" },
+    ];
+  }
+
+  async createCampaign(
+    input: CreateCampaignInput,
+  ): Promise<{ campaignId: string }> {
+    await delay();
+    const id = `cmp_${this.campaigns.length + 1}_${input.accountId.slice(-4)}`;
+    this.campaigns.push({
+      id,
+      accountId: input.accountId,
+      name: input.name,
+      status: "paused",
+      objective: "מכירות",
+      dailyBudget: input.dailyBudgetIls,
+      lifetimeBudget: null,
+      spend: 0,
+      results: 0,
+      reach: 0,
+      rejectionReason: null,
+      createdAt: "2026-06-06T00:00:00.000Z",
+    });
+    return { campaignId: id };
   }
 
   private setStatus(

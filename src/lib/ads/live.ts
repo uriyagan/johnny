@@ -2,10 +2,12 @@ import "server-only";
 import { graphGet, graphPost } from "@/lib/meta/graph";
 import type { AdsProvider } from "./provider";
 import type {
+  CreateCampaignInput,
   MetaAdAccount,
   MetaCampaign,
   MetaCampaignStatus,
   MetaInsights,
+  MetaPage,
 } from "./types";
 
 /** Account fields & budgets come back in currency MINOR units (e.g. agorot). */
@@ -156,6 +158,87 @@ export class LiveAdsProvider implements AdsProvider {
       costPerResult: results > 0 ? +(spend / results).toFixed(2) : 0,
       period: { start: "", end: "" },
     };
+  }
+
+  async listPages(): Promise<MetaPage[]> {
+    const data = await graphGet<{ data: { id: string; name: string }[] }>(
+      "me/accounts",
+      this.token,
+      { fields: "id,name", limit: 100 },
+    );
+    return (data.data ?? []).map((p) => ({ id: p.id, name: p.name }));
+  }
+
+  async createCampaign(
+    input: CreateCampaignInput,
+  ): Promise<{ campaignId: string }> {
+    const acct = input.accountId;
+
+    // 1) Campaign — traffic objective avoids needing a pixel; always PAUSED.
+    const campaign = await graphPost<{ id: string }>(
+      `${acct}/campaigns`,
+      this.token,
+      {
+        name: input.name,
+        objective: "OUTCOME_TRAFFIC",
+        status: "PAUSED",
+        special_ad_categories: "[]",
+      },
+    );
+
+    // 2) Ad set — budget, audience, optimize for link clicks.
+    const startTime = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+    const targeting = JSON.stringify({
+      geo_locations: { countries: input.audience.countries },
+      age_min: input.audience.ageMin,
+      age_max: input.audience.ageMax,
+    });
+    const adset = await graphPost<{ id: string }>(`${acct}/adsets`, this.token, {
+      name: `${input.name} — סט מודעות`,
+      campaign_id: campaign.id,
+      daily_budget: Math.round(input.dailyBudgetIls * 100),
+      billing_event: "IMPRESSIONS",
+      optimization_goal: "LINK_CLICKS",
+      bid_strategy: "LOWEST_COST_WITHOUT_CAP",
+      targeting,
+      start_time: startTime,
+      status: "PAUSED",
+    });
+
+    // 3) Creative — link ad tied to the chosen Page.
+    const linkData: Record<string, unknown> = {
+      message: input.primaryText,
+      link: input.linkUrl,
+      name: input.headline,
+      description: input.description,
+      call_to_action: {
+        type: input.callToAction,
+        value: { link: input.linkUrl },
+      },
+    };
+    if (input.imageUrl) linkData.picture = input.imageUrl;
+
+    const creative = await graphPost<{ id: string }>(
+      `${acct}/adcreatives`,
+      this.token,
+      {
+        name: `${input.name} — קריאייטיב`,
+        object_story_spec: JSON.stringify({
+          page_id: input.pageId,
+          link_data: linkData,
+        }),
+      },
+    );
+
+    // 4) Ad — PAUSED.
+    await graphPost<{ id: string }>(`${acct}/ads`, this.token, {
+      name: input.name,
+      adset_id: adset.id,
+      creative: JSON.stringify({ creative_id: creative.id }),
+      status: "PAUSED",
+    });
+
+    return { campaignId: campaign.id };
   }
 
   private toAccount(a: RawAccount, amountSpentThisMonth: number): MetaAdAccount {
