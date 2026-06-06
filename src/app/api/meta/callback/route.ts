@@ -2,11 +2,8 @@ import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { serverEnv } from "@/lib/env";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { getTierLimitInfo } from "@/lib/accounts";
 import { saveMetaToken } from "@/lib/meta/connection";
 import { META_GRAPH } from "@/lib/meta/graph";
-import { LiveAdsProvider } from "@/lib/ads/live";
 import { logServerError } from "@/lib/log-error";
 
 const STATE_COOKIE = "meta_oauth_state";
@@ -79,37 +76,12 @@ export async function GET(request: NextRequest) {
       userId: user.id,
       token,
       expiresAt,
-      scopes: "ads_read,ads_management,business_management,pages",
+      scopes: "ads_read,ads_management",
       metaUserId: me?.id ?? null,
     });
 
-    // 4) import ad accounts (respecting the tier limit)
-    const provider = new LiveAdsProvider(token);
-    const accounts = await provider.listAccounts();
-
-    const admin = createAdminClient();
-    const { limit } = await getTierLimitInfo(admin, user.id);
-    const { count: existing } = await admin
-      .from("ad_accounts")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id);
-
-    const remaining = limit === null ? accounts.length : Math.max(0, limit - (existing ?? 0));
-    for (const acc of accounts.slice(0, remaining)) {
-      await admin.from("ad_accounts").upsert(
-        {
-          user_id: user.id,
-          provider: "meta",
-          external_account_id: acc.id,
-          name: acc.name,
-          status: "connected",
-          connected_at: new Date().toISOString(),
-        },
-        { onConflict: "provider,external_account_id" },
-      );
-    }
-
-    return NextResponse.redirect(`${origin}/accounts?meta=connected`);
+    // Let the user CHOOSE which ad account(s) to connect (no auto-import).
+    return NextResponse.redirect(`${origin}/accounts/connect?meta=connected`);
   } catch (e) {
     await logServerError(e, { route: "/api/meta/callback", userId: user.id });
     const msg = e instanceof Error ? e.message : "unknown";

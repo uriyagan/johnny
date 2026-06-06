@@ -42,8 +42,15 @@ export default async function AccountsPage({
   const { limit, used, canAdd } = await getTierLimitInfo(supabase, user.id);
   const list = accounts ?? [];
 
-  // Live mode connects via Meta OAuth; mock mode uses the in-app picker.
-  const connectHref = USE_MOCKS_ADS ? "/accounts/connect" : "/api/meta/connect";
+  // Live mode: first connect via Meta OAuth, then pick accounts; once a Meta
+  // token exists, go straight to the account picker. Mock mode always picks.
+  let connectHref = "/accounts/connect";
+  if (!USE_MOCKS_ADS) {
+    const { hasMetaConnection } = await import("@/lib/meta/connection");
+    connectHref = (await hasMetaConnection(user.id))
+      ? "/accounts/connect"
+      : "/api/meta/connect";
+  }
   const metaNotice = searchParams.meta ? META_MSG[searchParams.meta] : undefined;
 
   return (

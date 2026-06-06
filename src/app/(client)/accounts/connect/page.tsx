@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getTierLimitInfo } from "@/lib/accounts";
 import { getAdsProvider } from "@/lib/ads";
 import { connectAccount } from "@/lib/actions/accounts";
+import { USE_MOCKS_ADS } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 
 const ERRORS: Record<string, string> = {
@@ -18,6 +20,13 @@ export default async function ConnectAccountPage({
   searchParams: { error?: string };
 }) {
   const user = await requireUser();
+
+  // Live mode requires a Meta token first.
+  if (!USE_MOCKS_ADS) {
+    const { hasMetaConnection } = await import("@/lib/meta/connection");
+    if (!(await hasMetaConnection(user.id))) redirect("/api/meta/connect");
+  }
+
   const supabase = createClient();
 
   const { canAdd, limit, used } = await getTierLimitInfo(supabase, user.id);
