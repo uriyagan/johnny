@@ -31,6 +31,8 @@ const serverSchema = z.object({
   META_APP_SECRET: z.string().optional(),
   /** Token echoed back during Meta webhook subscription verification. */
   META_VERIFY_TOKEN: z.string().optional(),
+  /** 32-byte hex key for encrypting stored Meta access tokens. */
+  META_TOKEN_ENC_KEY: z.string().optional(),
   /** Shared secret the Cloudflare Worker sends to authorize cron endpoints. */
   CRON_SECRET: z.string().optional(),
 });

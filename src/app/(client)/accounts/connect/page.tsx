@@ -30,7 +30,7 @@ export default async function ConnectAccountPage({
     (connected ?? []).map((r) => r.external_account_id),
   );
 
-  const ads = getAdsProvider();
+  const ads = await getAdsProvider(user.id);
   const available = (await ads.listAccounts()).filter(
     (a) => !connectedIds.has(a.id),
   );

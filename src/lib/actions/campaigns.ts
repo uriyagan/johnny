@@ -9,9 +9,10 @@ import { isGlobalKill } from "@/lib/kill-switch";
 export async function pauseCampaign(formData: FormData) {
   const id = String(formData.get("id") ?? "").trim();
   if (!id) return;
-  await requireUser();
+  const user = await requireUser();
   if (await isGlobalKill("api_execution")) return; // emergency stop
-  await getAdsProvider().pauseCampaign(id);
+  const ads = await getAdsProvider(user.id);
+  await ads.pauseCampaign(id);
   revalidatePath("/campaigns");
   revalidatePath("/dashboard");
 }
@@ -20,9 +21,10 @@ export async function pauseCampaign(formData: FormData) {
 export async function resumeCampaign(formData: FormData) {
   const id = String(formData.get("id") ?? "").trim();
   if (!id) return;
-  await requireUser();
+  const user = await requireUser();
   if (await isGlobalKill("api_execution")) return; // emergency stop
-  await getAdsProvider().resumeCampaign(id);
+  const ads = await getAdsProvider(user.id);
+  await ads.resumeCampaign(id);
   revalidatePath("/campaigns");
   revalidatePath("/dashboard");
 }

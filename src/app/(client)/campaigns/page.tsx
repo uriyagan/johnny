@@ -36,7 +36,24 @@ export default async function CampaignsPage() {
     (accounts ?? []).map((a) => [a.external_account_id, a.name ?? "חשבון"]),
   );
 
-  const ads = getAdsProvider();
+  if (accountName.size === 0) {
+    return (
+      <div className="flex-1 overflow-y-auto p-8">
+        <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
+        <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-12 text-center">
+          <p className="text-muted-2">חברו חשבון מודעות כדי לראות קמפיינים.</p>
+          <Link
+            href="/accounts"
+            className="mt-4 inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
+          >
+            חיבור חשבון
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const ads = await getAdsProvider(user.id);
   const campaigns = (
     await Promise.all(
       [...accountName.keys()].map((id) => ads.listCampaigns(id)),
@@ -53,23 +70,6 @@ export default async function CampaignsPage() {
         explanations.set(c.id, await ai.explainRejection(c.rejectionReason!));
       }),
   );
-
-  if (accountName.size === 0) {
-    return (
-      <div className="flex-1 overflow-y-auto p-8">
-        <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
-        <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-12 text-center">
-          <p className="text-muted-2">חברו חשבון מודעות כדי לראות קמפיינים.</p>
-          <Link
-            href="/accounts/connect"
-            className="mt-4 inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
-          >
-            חיבור חשבון
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex-1 overflow-y-auto p-8">

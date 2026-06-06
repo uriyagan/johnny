@@ -500,6 +500,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      meta_connections: {
+        Row: {
+          user_id: string;
+          access_token_enc: string;
+          token_expires_at: string | null;
+          scopes: string | null;
+          meta_user_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          access_token_enc: string;
+          token_expires_at?: string | null;
+          scopes?: string | null;
+          meta_user_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          access_token_enc?: string;
+          token_expires_at?: string | null;
+          scopes?: string | null;
+          meta_user_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       kill_switches: {
         Row: {
           id: string;

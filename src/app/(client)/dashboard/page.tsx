@@ -4,6 +4,7 @@ import { getAdsProvider } from "@/lib/ads";
 import { startCheckin, submitFeedback } from "@/lib/actions/crm";
 import { Button } from "@/components/ui/button";
 import type { FeedbackAnalysis } from "@/lib/ai/types";
+import type { MetaAdAccount, MetaCampaign } from "@/lib/ads/types";
 
 const ils = new Intl.NumberFormat("he-IL", {
   style: "currency",
@@ -28,11 +29,19 @@ export default async function DashboardPage() {
     .eq("user_id", user.id);
   const ids = (connected ?? []).map((r) => r.external_account_id);
 
-  const ads = getAdsProvider();
-  const [accountData, campaignLists] = await Promise.all([
-    Promise.all(ids.map((id) => ads.getAccount(id))),
-    Promise.all(ids.map((id) => ads.listCampaigns(id))),
-  ]);
+  let accountData: (MetaAdAccount | null)[] = [];
+  let campaignLists: MetaCampaign[][] = [];
+  if (ids.length > 0) {
+    try {
+      const ads = await getAdsProvider(user.id);
+      [accountData, campaignLists] = await Promise.all([
+        Promise.all(ids.map((id) => ads.getAccount(id))),
+        Promise.all(ids.map((id) => ads.listCampaigns(id))),
+      ]);
+    } catch {
+      // Not connected yet / token issue — show zeros rather than crash.
+    }
+  }
 
   const campaigns = campaignLists.flat();
   const activeCampaigns = campaigns.filter((c) => c.status === "active").length;

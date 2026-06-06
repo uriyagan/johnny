@@ -5,7 +5,16 @@ import { getTierLimitInfo } from "@/lib/accounts";
 import { disconnectAccount } from "@/lib/actions/accounts";
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { USE_MOCKS_ADS } from "@/lib/config";
 import type { Database } from "@/types/database";
+
+const META_MSG: Record<string, string> = {
+  connected: "חשבון Meta חובר בהצלחה ✓",
+  denied: "החיבור בוטל.",
+  state: "שגיאת אבטחה בחיבור, נסו שוב.",
+  config: "חסרה הגדרת אפליקציית Meta.",
+  error: "החיבור נכשל. נסו שוב.",
+};
 
 type AccountStatus = Database["public"]["Enums"]["ad_account_status"];
 
@@ -16,7 +25,11 @@ const STATUS: Record<AccountStatus, { label: string; tone: BadgeTone }> = {
   error: { label: "שגיאה", tone: "red" },
 };
 
-export default async function AccountsPage() {
+export default async function AccountsPage({
+  searchParams,
+}: {
+  searchParams: { meta?: string };
+}) {
   const user = await requireUser();
   const supabase = createClient();
 
@@ -29,8 +42,23 @@ export default async function AccountsPage() {
   const { limit, used, canAdd } = await getTierLimitInfo(supabase, user.id);
   const list = accounts ?? [];
 
+  // Live mode connects via Meta OAuth; mock mode uses the in-app picker.
+  const connectHref = USE_MOCKS_ADS ? "/accounts/connect" : "/api/meta/connect";
+  const metaNotice = searchParams.meta ? META_MSG[searchParams.meta] : undefined;
+
   return (
     <div className="flex-1 overflow-y-auto p-8">
+      {metaNotice && (
+        <p
+          className={`mb-4 rounded-md px-3 py-2 text-sm ${
+            searchParams.meta === "connected"
+              ? "bg-emerald-500/10 text-emerald-300"
+              : "bg-red-500/10 text-red-300"
+          }`}
+        >
+          {metaNotice}
+        </p>
+      )}
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">חשבונות מודעות</h1>
@@ -40,7 +68,7 @@ export default async function AccountsPage() {
         </div>
         {canAdd ? (
           <Link
-            href="/accounts/connect"
+            href={connectHref}
             className="inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
           >
             + חיבור חשבון
@@ -59,7 +87,7 @@ export default async function AccountsPage() {
         <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-12 text-center">
           <p className="text-muted-2">עדיין לא חיברתם חשבון מודעות.</p>
           <Link
-            href="/accounts/connect"
+            href={connectHref}
             className="mt-4 inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
           >
             חיבור חשבון ראשון

@@ -107,7 +107,7 @@ export function ChatWindow({
             ))}
             {pending && (
               <div className="self-end rounded-2xl border border-border bg-surface px-4 py-2 text-sm text-muted-2">
-                מקליד…
+                ג׳וני מקליד…
               </div>
             )}
             <div ref={endRef} />

@@ -39,12 +39,17 @@ export async function evaluateBudget(userId: string): Promise<BudgetResult> {
     .eq("user_id", userId);
   const ids = (accounts ?? []).map((a) => a.external_account_id);
 
-  const ads = getAdsProvider();
-  const accData = await Promise.all(ids.map((id) => ads.getAccount(id)));
-  const spend = accData.reduce(
-    (sum, a) => sum + (a?.amountSpentThisMonth ?? 0),
-    0,
-  );
+  let spend = 0;
+  let ads: Awaited<ReturnType<typeof getAdsProvider>> | null = null;
+  if (ids.length > 0) {
+    try {
+      ads = await getAdsProvider(userId);
+      const accData = await Promise.all(ids.map((id) => ads!.getAccount(id)));
+      spend = accData.reduce((sum, a) => sum + (a?.amountSpentThisMonth ?? 0), 0);
+    } catch {
+      return { status: "no_cap", spend: 0, cap: cap.monthly_cap_ils };
+    }
+  }
 
   await supabase
     .from("budget_caps")
@@ -55,14 +60,15 @@ export async function evaluateBudget(userId: string): Promise<BudgetResult> {
 
   // Hard cap reached → pause active campaigns once.
   if (spend >= cap.monthly_cap_ils) {
-    if (cap.hard_pause_enabled && !cap.triggered_at) {
+    if (cap.hard_pause_enabled && !cap.triggered_at && ads) {
+      const provider = ads;
       const campaigns = (
-        await Promise.all(ids.map((id) => ads.listCampaigns(id)))
+        await Promise.all(ids.map((id) => provider.listCampaigns(id)))
       ).flat();
       await Promise.all(
         campaigns
           .filter((c) => c.status === "active")
-          .map((c) => ads.pauseCampaign(c.id)),
+          .map((c) => provider.pauseCampaign(c.id)),
       );
 
       await supabase
