@@ -18,18 +18,25 @@ export function renderTemplate(
   });
 }
 
-const LOGO_URL = "https://app.askjohnny.io/logo.png";
+const LOGO_URL = "https://app.askjohnny.io/email-logo.png";
 
-/** Wraps body HTML in a simple RTL branded shell. */
+/** Wraps body HTML in a clean, light, RTL branded email (table layout for clients). */
 function shell(bodyHtml: string): string {
-  return `<!doctype html><html dir="rtl" lang="he"><body style="font-family:Arial,Helvetica,sans-serif;background:#0A0E14;color:#E7ECF3;padding:24px">
-  <div style="max-width:560px;margin:0 auto;background:#11161F;border:1px solid #232C38;border-radius:16px;padding:24px">
-    <div style="margin-bottom:16px">
-      <img src="${LOGO_URL}" alt="Johnny" width="36" height="36" style="width:36px;height:36px;vertical-align:middle" />
-      <span style="vertical-align:middle;font-weight:bold;font-size:20px;color:#34d399;margin-inline-start:8px">Johnny</span>
-    </div>
-    ${bodyHtml}
-  </div></body></html>`;
+  return `<!doctype html><html dir="rtl" lang="he"><body style="margin:0;background:#f4f6f8;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+    <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border:1px solid #e6e9ee;border-radius:16px;overflow:hidden">
+      <tr><td align="center" style="padding:28px 24px 4px">
+        <img src="${LOGO_URL}" width="56" height="56" alt="Johnny" style="display:block;border-radius:14px" />
+      </td></tr>
+      <tr><td dir="rtl" style="padding:12px 28px 24px;color:#1f2733;font-size:15px;line-height:1.7">
+        ${bodyHtml}
+      </td></tr>
+      <tr><td align="center" style="padding:16px 24px 22px;border-top:1px solid #eef1f4;color:#9aa7b4;font-size:12px">
+        נשלח על ידי Johnny · ניהול קמפיינים אוטומטי
+      </td></tr>
+    </table>
+  </td></tr></table>
+  </body></html>`;
 }
 
 /** Loads the effective template for a trigger (DB override or registry default). */
