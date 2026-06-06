@@ -4,9 +4,12 @@ import type { AIProvider } from "./provider";
 import type {
   AIChatResult,
   AssetAnalysis,
+  CampaignDraft,
+  CampaignPlanResult,
   ChatMessageInput,
   FeedbackAnalysis,
   GeneratedCopy,
+  GeneratedImage,
   IntentAction,
   LeadQuality,
   RejectionExplanation,
@@ -207,5 +210,67 @@ export class LiveAIProvider implements AIProvider {
       leadQuality: lq,
       adjustments: asStringArray(p.adjustments),
     };
+  }
+
+  async planCampaign(input: {
+    brief: string;
+    answers?: string;
+  }): Promise<CampaignPlanResult> {
+    const system =
+      "אתה מנהל קמפיינים מומחה לבעלי עסקים בישראל. מטרתך להפוך תיאור חופשי לקמפיין פרסום מוכן ב‑Meta. " +
+      "אם חסר מידע קריטי (מה מקדמים, תקציב יומי, קישור לאתר/יעד) — החזר שאלות הבהרה קצרות בעברית. " +
+      "אם יש מספיק מידע — בנה טיוטה מלאה. החזר JSON בלבד במבנה:\n" +
+      '{"ready": boolean, "questions": string[], "draft": {' +
+      '"name": string, "objective": "OUTCOME_TRAFFIC"|"OUTCOME_SALES"|"OUTCOME_LEADS"|"OUTCOME_ENGAGEMENT"|"OUTCOME_AWARENESS", ' +
+      '"productDescription": string, "audience": {"countries": string[], "ageMin": number, "ageMax": number, "interests": string}, ' +
+      '"dailyBudgetIls": number, "headline": string, "primaryText": string, "description": string, ' +
+      '"callToAction": "SHOP_NOW"|"LEARN_MORE"|"SIGN_UP"|"BOOK_TRAVEL"|"CONTACT_US", ' +
+      '"imagePrompt": string (English, detailed photo prompt for the ad image)}}. ' +
+      "ברירת מחדל: countries=[\"IL\"], ageMin=18, ageMax=65. הטקסטים בעברית שיווקית.";
+
+    const user =
+      `תיאור הקמפיין: ${input.brief}` +
+      (input.answers ? `\nתשובות הבהרה: ${input.answers}` : "");
+
+    const text = await this.generate(system, [
+      { role: "user", parts: [{ text: user }] },
+    ]);
+    const parsed = parseJson<CampaignPlanResult>(text, {
+      ready: false,
+      questions: ["תוכל לפרט מה תרצה לפרסם, מה התקציב היומי, ולאן להפנות את הגולשים?"],
+    });
+
+    if (!parsed.ready || !parsed.draft) {
+      return {
+        ready: false,
+        questions: asStringArray(parsed.questions),
+      };
+    }
+    return { ready: true, questions: [], draft: parsed.draft as CampaignDraft };
+  }
+
+  async generateImage(prompt: string): Promise<GeneratedImage> {
+    const { GEMINI_API_KEY, GEMINI_IMAGE_MODEL } = serverEnv();
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not set");
+
+    const res = await fetch(
+      `${ENDPOINT}/${GEMINI_IMAGE_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+        }),
+      },
+    );
+    if (!res.ok) throw new Error(`Gemini image ${res.status}: ${await res.text()}`);
+
+    const data = await res.json();
+    const parts = data?.candidates?.[0]?.content?.parts ?? [];
+    const img = parts.find(
+      (p: { inlineData?: { data: string; mimeType: string } }) => p.inlineData,
+    );
+    if (!img?.inlineData) throw new Error("no image returned");
+    return { base64: img.inlineData.data, mimeType: img.inlineData.mimeType };
   }
 }

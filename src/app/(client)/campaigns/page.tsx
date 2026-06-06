@@ -73,8 +73,18 @@ export default async function CampaignsPage() {
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
-      <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
-      <p className="mt-1 text-muted">כל הקמפיינים שלך במקום אחד.</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
+          <p className="mt-1 text-muted">כל הקמפיינים שלך במקום אחד.</p>
+        </div>
+        <Link
+          href="/campaigns/new"
+          className="inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
+        >
+          + קמפיין חדש עם ג׳וני
+        </Link>
+      </div>
 
       <ul className="mt-6 space-y-3">
         {campaigns.map((c) => (

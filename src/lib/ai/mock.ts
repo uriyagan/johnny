@@ -3,13 +3,19 @@ import type { AIProvider } from "./provider";
 import type {
   AIChatResult,
   AssetAnalysis,
+  CampaignPlanResult,
   ChatMessageInput,
   FeedbackAnalysis,
   GeneratedCopy,
+  GeneratedImage,
   IntentAction,
   ParsedIntent,
   RejectionExplanation,
 } from "./types";
+
+// 1x1 transparent PNG.
+const PLACEHOLDER_PNG =
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
 
 const delay = (ms = 350) => new Promise((r) => setTimeout(r, ms));
 
@@ -151,6 +157,41 @@ export class MockAIProvider implements AIProvider {
       leadQuality: "mixed",
       adjustments: ["ננסה לחדד את ההגדרות כדי לשפר את איכות הפניות"],
     };
+  }
+
+  async planCampaign(input: {
+    brief: string;
+    answers?: string;
+  }): Promise<CampaignPlanResult> {
+    await delay();
+    const text = `${input.brief} ${input.answers ?? ""}`;
+    if (text.trim().length < 8) {
+      return {
+        ready: false,
+        questions: ["מה תרצה לפרסם, מה התקציב היומי, ולאן להפנות את הגולשים?"],
+      };
+    }
+    return {
+      ready: true,
+      questions: [],
+      draft: {
+        name: "קמפיין חדש",
+        objective: "OUTCOME_SALES",
+        productDescription: input.brief.slice(0, 120),
+        audience: { countries: ["IL"], ageMin: 18, ageMax: 65, interests: "כללי" },
+        dailyBudgetIls: 50,
+        headline: "המוצר החדש שלנו כבר כאן",
+        primaryText: "גלו את הקולקציה החדשה — משלוח מהיר עד הבית 🌟",
+        description: "הזמינו עכשיו",
+        callToAction: "SHOP_NOW",
+        imagePrompt: "clean product photo, soft daylight, minimal background",
+      },
+    };
+  }
+
+  async generateImage(): Promise<GeneratedImage> {
+    await delay();
+    return { base64: PLACEHOLDER_PNG, mimeType: "image/png" };
   }
 
   private parse(text: string): ParsedIntent {

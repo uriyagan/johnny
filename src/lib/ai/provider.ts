@@ -1,9 +1,11 @@
 import type {
   AIChatResult,
   AssetAnalysis,
+  CampaignPlanResult,
   ChatMessageInput,
   FeedbackAnalysis,
   GeneratedCopy,
+  GeneratedImage,
   RejectionExplanation,
 } from "./types";
 
@@ -32,4 +34,13 @@ export interface AIProvider {
 
   /** Analyze the merchant's lead-quality feedback into targeting adjustments (Pillar 5). */
   analyzeFeedback(text: string): Promise<FeedbackAnalysis>;
+
+  /** Turn a free-text brief (+ optional answers) into a campaign draft or clarifying questions. */
+  planCampaign(input: {
+    brief: string;
+    answers?: string;
+  }): Promise<CampaignPlanResult>;
+
+  /** Generate an ad image from an English prompt. */
+  generateImage(prompt: string): Promise<GeneratedImage>;
 }
