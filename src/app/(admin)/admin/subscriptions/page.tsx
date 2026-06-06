@@ -37,11 +37,11 @@ export default async function AdminSubscriptionsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">מנויים</h1>
+      <h1 className="text-2xl font-bold text-foreground">מנויים</h1>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500">
+          <thead className="bg-background text-muted-2">
             <tr>
               <th className="px-4 py-3 text-start font-medium">לקוח</th>
               <th className="px-4 py-3 text-start font-medium">תוכנית</th>
@@ -53,22 +53,22 @@ export default async function AdminSubscriptionsPage() {
             {(subs ?? []).map((s) => {
               const st = STATUS[s.status];
               return (
-                <tr key={s.user_id} className="border-t border-gray-100">
-                  <td className="px-4 py-3 text-gray-900">
+                <tr key={s.user_id} className="border-t border-border">
+                  <td className="px-4 py-3 text-foreground">
                     {nameByUser.get(s.user_id) ?? "—"}
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-muted">
                     {planByTier(s.tier as Tier).name}
                   </td>
                   <td className="px-4 py-3">
                     <Badge tone={st.tone}>{st.label}</Badge>
                     {s.cancel_at_period_end && (
-                      <span className="ms-2 text-xs text-gray-400">
+                      <span className="ms-2 text-xs text-muted-2">
                         (מבוטל בסוף התקופה)
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-muted-2">
                     {s.current_period_end
                       ? dateFmt.format(new Date(s.current_period_end))
                       : "—"}
@@ -78,7 +78,7 @@ export default async function AdminSubscriptionsPage() {
             })}
             {(subs ?? []).length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-gray-400">
+                <td colSpan={4} className="px-4 py-6 text-center text-muted-2">
                   אין מנויים עדיין.
                 </td>
               </tr>

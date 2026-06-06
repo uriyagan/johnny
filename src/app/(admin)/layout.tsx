@@ -13,17 +13,17 @@ export default async function AdminLayout({
   await requireAdmin();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white">
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border bg-surface">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3">
           <div className="flex items-center gap-6">
-            <span className="font-bold text-gray-900">Johnny · ניהול</span>
+            <span className="font-bold text-foreground">Johnny · ניהול</span>
             <AdminNav />
           </div>
           <div className="flex items-center gap-3">
             <Link
               href="/dashboard"
-              className="text-sm text-gray-500 hover:underline"
+              className="text-sm text-muted-2 hover:underline"
             >
               ← לאפליקציה
             </Link>

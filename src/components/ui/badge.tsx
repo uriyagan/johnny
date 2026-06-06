@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 export type BadgeTone = "green" | "gray" | "yellow" | "red";
 
 const tones: Record<BadgeTone, string> = {
-  green: "bg-emerald-50 text-emerald-700",
-  gray: "bg-gray-100 text-gray-600",
-  yellow: "bg-amber-50 text-amber-700",
-  red: "bg-red-50 text-red-700",
+  green: "bg-emerald-500/10 text-emerald-300",
+  gray: "bg-surface-2 text-muted",
+  yellow: "bg-amber-500/10 text-amber-300",
+  red: "bg-red-500/10 text-red-300",
 };
 
 export function Badge({

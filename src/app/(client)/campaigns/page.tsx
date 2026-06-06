@@ -57,9 +57,9 @@ export default async function CampaignsPage() {
   if (accountName.size === 0) {
     return (
       <div className="flex-1 overflow-y-auto p-8">
-        <h1 className="text-2xl font-bold text-gray-900">קמפיינים</h1>
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <p className="text-gray-500">חברו חשבון מודעות כדי לראות קמפיינים.</p>
+        <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
+        <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-12 text-center">
+          <p className="text-muted-2">חברו חשבון מודעות כדי לראות קמפיינים.</p>
           <Link
             href="/accounts/connect"
             className="mt-4 inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
@@ -73,8 +73,8 @@ export default async function CampaignsPage() {
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
-      <h1 className="text-2xl font-bold text-gray-900">קמפיינים</h1>
-      <p className="mt-1 text-gray-600">כל הקמפיינים שלך במקום אחד.</p>
+      <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
+      <p className="mt-1 text-muted">כל הקמפיינים שלך במקום אחד.</p>
 
       <ul className="mt-6 space-y-3">
         {campaigns.map((c) => (
@@ -101,16 +101,16 @@ function CampaignRow({
 }) {
   const s = STATUS[c.status];
   return (
-    <li className="rounded-2xl border border-gray-200 bg-white p-4">
+    <li className="rounded-2xl border border-border bg-surface p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-medium text-gray-900">{c.name}</p>
-          <p className="text-xs text-gray-400">
+          <p className="font-medium text-foreground">{c.name}</p>
+          <p className="text-xs text-muted-2">
             {accountName} · {c.objective}
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-muted-2">
             {ils.format(c.spend)} · {c.results} תוצאות
           </span>
           <Badge tone={s.tone}>{s.label}</Badge>
@@ -134,13 +134,13 @@ function CampaignRow({
       </div>
 
       {c.status === "rejected" && explanation && (
-        <div className="mt-3 rounded-xl bg-red-50 p-3 text-sm">
-          <p className="font-medium text-red-700">המודעה נדחתה</p>
-          <p className="mt-1 text-red-700">{explanation.reasonHe}</p>
+        <div className="mt-3 rounded-xl bg-red-500/10 p-3 text-sm">
+          <p className="font-medium text-red-300">המודעה נדחתה</p>
+          <p className="mt-1 text-red-300">{explanation.reasonHe}</p>
           {explanation.safeCopy.length > 0 && (
             <div className="mt-2">
-              <p className="font-medium text-gray-700">הצעות לנוסח חדש:</p>
-              <ul className="mt-1 space-y-1 text-gray-600">
+              <p className="font-medium text-muted">הצעות לנוסח חדש:</p>
+              <ul className="mt-1 space-y-1 text-muted">
                 {explanation.safeCopy.map((copy) => (
                   <li key={copy}>• {copy}</li>
                 ))}

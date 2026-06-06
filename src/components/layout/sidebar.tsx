@@ -11,9 +11,9 @@ export function Sidebar({
   email: string;
 }) {
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-s border-gray-200 bg-white">
+    <aside className="flex w-64 shrink-0 flex-col border-s border-border bg-surface">
       <div className="px-5 py-6">
-        <span className="text-2xl font-bold text-emerald-600">Johnny</span>
+        <span className="text-2xl font-bold text-emerald-400">Johnny</span>
       </div>
 
       <nav className="flex-1 space-y-1 px-3">
@@ -22,12 +22,12 @@ export function Sidebar({
         ))}
       </nav>
 
-      <div className="border-t border-gray-200 p-3">
+      <div className="border-t border-border p-3">
         <div className="mb-2 px-2">
-          <p className="truncate text-sm font-medium text-gray-900">
+          <p className="truncate text-sm font-medium text-foreground">
             {displayName}
           </p>
-          <p className="truncate text-xs text-gray-400" dir="ltr">
+          <p className="truncate text-xs text-muted-2" dir="ltr">
             {email}
           </p>
         </div>

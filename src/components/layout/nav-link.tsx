@@ -15,8 +15,8 @@ export function NavLink({ item }: { item: NavItem }) {
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-emerald-50 text-emerald-700"
-          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+          ? "bg-emerald-500/10 text-emerald-300"
+          : "text-muted hover:bg-surface-2 hover:text-foreground",
       )}
     >
       <svg

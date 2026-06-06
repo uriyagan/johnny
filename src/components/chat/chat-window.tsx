@@ -62,9 +62,9 @@ export function ChatWindow({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-gray-200 px-6 py-4">
-        <h1 className="text-lg font-semibold text-gray-900">צ'אט</h1>
-        <p className="text-sm text-gray-500">
+      <div className="border-b border-border px-6 py-4">
+        <h1 className="text-lg font-semibold text-foreground">צ'אט</h1>
+        <p className="text-sm text-muted-2">
           דברו איתי במילים שלכם — אני כאן כדי לעזור.
         </p>
       </div>
@@ -73,8 +73,8 @@ export function ChatWindow({
         {isEmpty ? (
           <div className="mx-auto max-w-md pt-10 text-center">
             <p className="text-2xl">👋</p>
-            <p className="mt-2 font-medium text-gray-800">איך אפשר לעזור?</p>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-2 font-medium text-foreground">איך אפשר לעזור?</p>
+            <p className="mt-1 text-sm text-muted-2">
               נסו לכתוב לי משהו, למשל:
             </p>
             <div className="mt-4 flex flex-col gap-2">
@@ -83,7 +83,7 @@ export function ChatWindow({
                   key={ex}
                   type="button"
                   onClick={() => send(ex)}
-                  className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-emerald-300 hover:bg-emerald-50"
+                  className="rounded-xl border border-border bg-surface px-4 py-2 text-sm text-muted hover:border-emerald-500/40 hover:bg-emerald-500/10"
                 >
                   {ex}
                 </button>
@@ -99,14 +99,14 @@ export function ChatWindow({
                   "max-w-[80%] rounded-2xl px-4 py-2 text-sm leading-relaxed",
                   m.role === "user"
                     ? "self-start bg-emerald-600 text-white"
-                    : "self-end border border-gray-200 bg-white text-gray-800",
+                    : "self-end border border-border bg-surface text-foreground",
                 )}
               >
                 {m.content}
               </div>
             ))}
             {pending && (
-              <div className="self-end rounded-2xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-400">
+              <div className="self-end rounded-2xl border border-border bg-surface px-4 py-2 text-sm text-muted-2">
                 מקליד…
               </div>
             )}
@@ -120,15 +120,15 @@ export function ChatWindow({
           e.preventDefault();
           send(input);
         }}
-        className="border-t border-gray-200 px-6 py-4"
+        className="border-t border-border px-6 py-4"
       >
-        {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
+        {error && <p className="mb-2 text-sm text-red-400">{error}</p>}
         <div className="mx-auto flex max-w-2xl items-center gap-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="כתבו הודעה…"
-            className="h-11 flex-1 rounded-full border border-gray-300 bg-white px-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="h-11 flex-1 rounded-full border border-border bg-surface px-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
           <button
             type="submit"

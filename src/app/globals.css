@@ -3,10 +3,25 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
-html {
-  /* Hebrew RTL is set on <html dir="rtl"> in layout.tsx */
+html,
+body {
+  background-color: #0a0e14;
+  color: #e7ecf3;
   -webkit-text-size-adjust: 100%;
+}
+
+/* Subtle dark scrollbars */
+* {
+  scrollbar-color: #2a3340 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #2a3340;
+  border-radius: 9999px;
 }

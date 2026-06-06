@@ -17,7 +17,7 @@ export function PaymentForm() {
     return (
       <div className="space-y-2">
         {state.ok && (
-          <p className="text-sm text-emerald-600">פרטי התשלום עודכנו בהצלחה ✓</p>
+          <p className="text-sm text-emerald-400">פרטי התשלום עודכנו בהצלחה ✓</p>
         )}
         <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>
           עדכון אמצעי תשלום
@@ -29,7 +29,7 @@ export function PaymentForm() {
   return (
     <form action={action} className="space-y-4">
       {/* Embedded card fields (Stripe Elements replaces this container at go-live). */}
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+      <div className="rounded-xl border border-border bg-background p-4">
         <div>
           <Label htmlFor="card-number">מספר כרטיס</Label>
           <input
@@ -38,7 +38,7 @@ export function PaymentForm() {
             inputMode="numeric"
             dir="ltr"
             placeholder="1234 1234 1234 1234"
-            className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
         </div>
         <div className="mt-3 grid grid-cols-2 gap-3">
@@ -49,7 +49,7 @@ export function PaymentForm() {
               name="exp"
               dir="ltr"
               placeholder="MM/YY"
-              className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
           <div>
@@ -60,13 +60,13 @@ export function PaymentForm() {
               inputMode="numeric"
               dir="ltr"
               placeholder="123"
-              className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
         </div>
       </div>
 
-      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state.error && <p className="text-sm text-red-400">{state.error}</p>}
 
       <div className="flex gap-2">
         <SubmitButton size="sm" pendingLabel="שומר…">

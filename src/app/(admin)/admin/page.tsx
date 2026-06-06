@@ -35,28 +35,28 @@ export default async function AdminOverviewPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">סקירה</h1>
+      <h1 className="text-2xl font-bold text-foreground">סקירה</h1>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         {stats.map((s) => (
           <div
             key={s.label}
-            className="rounded-2xl border border-gray-200 bg-white p-5"
+            className="rounded-2xl border border-border bg-surface p-5"
           >
-            <p className="text-sm text-gray-500">{s.label}</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">{s.value}</p>
+            <p className="text-sm text-muted-2">{s.label}</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">{s.value}</p>
           </div>
         ))}
       </div>
 
-      <h2 className="mt-8 text-lg font-semibold text-gray-900">תקינות חיבורים</h2>
+      <h2 className="mt-8 text-lg font-semibold text-foreground">תקינות חיבורים</h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {providers.map((p) => (
           <div
             key={p}
-            className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-4"
+            className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4"
           >
-            <span className="font-medium uppercase text-gray-700">{p}</span>
+            <span className="font-medium uppercase text-muted">{p}</span>
             <Badge tone={USE_MOCKS ? "yellow" : "green"}>
               {USE_MOCKS ? "מצב הדגמה" : "פעיל"}
             </Badge>

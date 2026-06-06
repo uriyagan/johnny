@@ -72,8 +72,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
-      <h1 className="text-2xl font-bold text-gray-900">שלום, {name} 👋</h1>
-      <p className="mt-1 text-gray-600">
+      <h1 className="text-2xl font-bold text-foreground">שלום, {name} 👋</h1>
+      <p className="mt-1 text-muted">
         {profile?.business_name
           ? `נהל את הקמפיינים של ${profile.business_name} בקלות.`
           : "נהל את הקמפיינים שלך בקלות."}
@@ -83,21 +83,21 @@ export default async function DashboardPage() {
         {cards.map((card) => (
           <div
             key={card.label}
-            className="rounded-2xl border border-gray-200 bg-white p-5"
+            className="rounded-2xl border border-border bg-surface p-5"
           >
-            <p className="text-sm text-gray-500">{card.label}</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">{card.value}</p>
+            <p className="text-sm text-muted-2">{card.label}</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">{card.value}</p>
           </div>
         ))}
       </div>
 
       {/* Lead-quality check-in (Pillar 5) */}
       {ids.length > 0 && (
-        <section className="mt-8 max-w-2xl rounded-2xl border border-gray-200 bg-white p-5">
+        <section className="mt-8 max-w-2xl rounded-2xl border border-border bg-surface p-5">
           {openCheckin ? (
             <>
-              <h2 className="font-semibold text-gray-900">שאלה קטנה 💬</h2>
-              <p className="mt-1 text-gray-600">{openCheckin.question}</p>
+              <h2 className="font-semibold text-foreground">שאלה קטנה 💬</h2>
+              <p className="mt-1 text-muted">{openCheckin.question}</p>
               <form action={submitFeedback} className="mt-3">
                 <input type="hidden" name="id" value={openCheckin.id} />
                 <textarea
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
                   required
                   rows={3}
                   placeholder="כתבו לי במילים שלכם…"
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
                 <div className="mt-2">
                   <Button type="submit" size="sm">
@@ -116,12 +116,12 @@ export default async function DashboardPage() {
             </>
           ) : (
             <>
-              <h2 className="font-semibold text-gray-900">איך הלידים שלך?</h2>
-              <p className="mt-1 text-gray-600">
+              <h2 className="font-semibold text-foreground">איך הלידים שלך?</h2>
+              <p className="mt-1 text-muted">
                 ספרו לי איך הפניות האחרונות — ואכוונן את הקמפיינים בהתאם.
               </p>
               {lastAnalysis && (
-                <div className="mt-3 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">
+                <div className="mt-3 rounded-xl bg-emerald-500/10 p-3 text-sm text-emerald-200">
                   <p className="font-medium">מה עשינו לפי המשוב האחרון:</p>
                   <ul className="mt-1 space-y-1">
                     {lastAnalysis.adjustments.map((adj) => (

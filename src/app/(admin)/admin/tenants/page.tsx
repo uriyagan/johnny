@@ -29,11 +29,11 @@ export default async function TenantsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">לקוחות</h1>
+      <h1 className="text-2xl font-bold text-foreground">לקוחות</h1>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500">
+          <thead className="bg-background text-muted-2">
             <tr>
               <th className="px-4 py-3 text-start font-medium">שם / עסק</th>
               <th className="px-4 py-3 text-start font-medium">תוכנית</th>
@@ -46,9 +46,9 @@ export default async function TenantsPage() {
             {(profiles ?? []).map((p) => {
               const tier = tierByUser.get(p.id);
               return (
-                <tr key={p.id} className="border-t border-gray-100">
+                <tr key={p.id} className="border-t border-border">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-foreground">
                       {p.full_name ?? "—"}
                       {p.role === "admin" && (
                         <span className="ms-2 align-middle">
@@ -56,17 +56,17 @@ export default async function TenantsPage() {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-muted-2">
                       {p.business_name ?? ""}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-muted">
                     {tier ? planByTier(tier).name : "ללא"}
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-muted">
                     {accountsByUser.get(p.id) ?? 0}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-muted-2">
                     {dateFmt.format(new Date(p.created_at))}
                   </td>
                   <td className="px-4 py-3">

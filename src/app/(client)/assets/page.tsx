@@ -42,8 +42,8 @@ export default async function AssetsPage() {
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
-      <h1 className="text-2xl font-bold text-gray-900">מדיה</h1>
-      <p className="mt-1 text-gray-600">
+      <h1 className="text-2xl font-bold text-foreground">מדיה</h1>
+      <p className="mt-1 text-muted">
         העלו תמונות וסרטונים — נשפר אותם ונכתוב טקסטים שמוכרים.
       </p>
 
@@ -52,7 +52,7 @@ export default async function AssetsPage() {
       </div>
 
       {list.length === 0 ? (
-        <p className="mt-8 text-sm text-gray-500">עדיין לא העליתם קבצים.</p>
+        <p className="mt-8 text-sm text-muted-2">עדיין לא העליתם קבצים.</p>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((a) => {
@@ -62,9 +62,9 @@ export default async function AssetsPage() {
             return (
               <div
                 key={a.id}
-                className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white"
+                className="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface"
               >
-                <div className="relative h-40 bg-gray-100">
+                <div className="relative h-40 bg-surface-2">
                   {preview ? (
                     <Image
                       src={preview}
@@ -74,7 +74,7 @@ export default async function AssetsPage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-3xl text-gray-300">
+                    <div className="flex h-full items-center justify-center text-3xl text-muted-2">
                       {a.kind === "video" ? "🎬" : "📄"}
                     </div>
                   )}
@@ -82,7 +82,7 @@ export default async function AssetsPage() {
 
                 <div className="flex flex-1 flex-col p-4">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-sm font-medium text-gray-900">
+                    <p className="truncate text-sm font-medium text-foreground">
                       {a.original_filename}
                     </p>
                     <Badge tone="gray">{KIND_LABEL[a.kind] ?? a.kind}</Badge>
@@ -90,14 +90,14 @@ export default async function AssetsPage() {
 
                   {analysis && analysis.attributes.length > 0 && (
                     <div className="mt-3">
-                      <p className="text-xs font-medium text-gray-500">
+                      <p className="text-xs font-medium text-muted-2">
                         מה זיהינו:
                       </p>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {analysis.attributes.map((attr) => (
                           <span
                             key={attr}
-                            className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+                            className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted"
                           >
                             {attr}
                           </span>
@@ -108,10 +108,10 @@ export default async function AssetsPage() {
 
                   {copy && copy.variants.length > 0 && (
                     <div className="mt-3">
-                      <p className="text-xs font-medium text-gray-500">
+                      <p className="text-xs font-medium text-muted-2">
                         הצעות לטקסט:
                       </p>
-                      <ul className="mt-1 space-y-1 text-xs text-gray-600">
+                      <ul className="mt-1 space-y-1 text-xs text-muted">
                         {copy.variants.slice(0, 2).map((v) => (
                           <li key={v}>• {v}</li>
                         ))}

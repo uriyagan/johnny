@@ -7,7 +7,7 @@ export default async function SignupPage() {
 
   return (
     <div className="space-y-5">
-      <h2 className="text-xl font-semibold text-gray-900">יצירת חשבון</h2>
+      <h2 className="text-xl font-semibold text-foreground">יצירת חשבון</h2>
       <SignupForm />
     </div>
   );

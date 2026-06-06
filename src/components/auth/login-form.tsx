@@ -39,7 +39,7 @@ export function LoginForm() {
       </div>
 
       {state.error && (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-300">
           {state.error}
         </p>
       )}
@@ -48,9 +48,9 @@ export function LoginForm() {
         התחברות
       </SubmitButton>
 
-      <p className="pt-2 text-center text-sm text-gray-600">
+      <p className="pt-2 text-center text-sm text-muted">
         אין לך חשבון?{" "}
-        <Link href="/signup" className="font-medium text-emerald-600 hover:underline">
+        <Link href="/signup" className="font-medium text-emerald-400 hover:underline">
           להרשמה
         </Link>
       </p>

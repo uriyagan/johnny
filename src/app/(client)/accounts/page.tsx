@@ -33,8 +33,8 @@ export default async function AccountsPage() {
     <div className="flex-1 overflow-y-auto p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">חשבונות מודעות</h1>
-          <p className="mt-1 text-gray-600">
+          <h1 className="text-2xl font-bold text-foreground">חשבונות מודעות</h1>
+          <p className="mt-1 text-muted">
             מחוברים {used} מתוך {limit ?? "∞"} בתוכנית שלך.
           </p>
         </div>
@@ -48,7 +48,7 @@ export default async function AccountsPage() {
         ) : (
           <Link
             href="/billing"
-            className="inline-flex h-11 items-center rounded-lg bg-gray-100 px-5 text-sm font-medium text-gray-700 hover:bg-gray-200"
+            className="inline-flex h-11 items-center rounded-lg bg-surface-2 px-5 text-sm font-medium text-muted hover:bg-white/10"
           >
             שדרגו את התוכנית
           </Link>
@@ -56,8 +56,8 @@ export default async function AccountsPage() {
       </div>
 
       {list.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <p className="text-gray-500">עדיין לא חיברתם חשבון מודעות.</p>
+        <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-12 text-center">
+          <p className="text-muted-2">עדיין לא חיברתם חשבון מודעות.</p>
           <Link
             href="/accounts/connect"
             className="mt-4 inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
@@ -72,13 +72,13 @@ export default async function AccountsPage() {
             return (
               <li
                 key={acc.id}
-                className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-4"
+                className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4"
               >
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-foreground">
                     {acc.name ?? "חשבון מודעות"}
                   </p>
-                  <p className="text-xs text-gray-400" dir="ltr">
+                  <p className="text-xs text-muted-2" dir="ltr">
                     {acc.external_account_id}
                   </p>
                 </div>

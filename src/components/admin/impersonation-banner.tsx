@@ -7,7 +7,7 @@ export function ImpersonationBanner({ email }: { email: string }) {
         מצב התחזות — צופה כ‑<span className="font-medium">{email}</span>
       </span>
       <form action={stopImpersonation}>
-        <button type="submit" className="rounded bg-white/20 px-2 py-0.5 font-medium hover:bg-white/30">
+        <button type="submit" className="rounded bg-surface/20 px-2 py-0.5 font-medium hover:bg-surface/30">
           יציאה
         </button>
       </form>

@@ -47,11 +47,11 @@ export function SignupForm() {
           minLength={6}
           required
         />
-        <p className="mt-1 text-xs text-gray-400">לפחות 6 תווים</p>
+        <p className="mt-1 text-xs text-muted-2">לפחות 6 תווים</p>
       </div>
 
       {state.error && (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-300">
           {state.error}
         </p>
       )}
@@ -60,9 +60,9 @@ export function SignupForm() {
         הרשמה
       </SubmitButton>
 
-      <p className="pt-2 text-center text-sm text-gray-600">
+      <p className="pt-2 text-center text-sm text-muted">
         כבר יש לך חשבון?{" "}
-        <Link href="/login" className="font-medium text-emerald-600 hover:underline">
+        <Link href="/login" className="font-medium text-emerald-400 hover:underline">
           להתחברות
         </Link>
       </p>

@@ -33,8 +33,8 @@ export default async function KillSwitchesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">מתגי חירום</h1>
-      <p className="mt-1 text-gray-600">
+      <h1 className="text-2xl font-bold text-foreground">מתגי חירום</h1>
+      <p className="mt-1 text-muted">
         שליטה גלובלית על כלל הלקוחות. להשתמש בזהירות.
       </p>
 
@@ -44,16 +44,16 @@ export default async function KillSwitchesPage() {
           return (
             <div
               key={sw.type}
-              className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-5"
+              className="flex items-center justify-between rounded-2xl border border-border bg-surface p-5"
             >
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-gray-900">{sw.title}</p>
+                  <p className="font-medium text-foreground">{sw.title}</p>
                   <Badge tone={enabled ? "red" : "gray"}>
                     {enabled ? "פעיל" : "כבוי"}
                   </Badge>
                 </div>
-                <p className="mt-1 text-sm text-gray-500">{sw.description}</p>
+                <p className="mt-1 text-sm text-muted-2">{sw.description}</p>
               </div>
               <form action={toggleKillSwitch}>
                 <input type="hidden" name="type" value={sw.type} />

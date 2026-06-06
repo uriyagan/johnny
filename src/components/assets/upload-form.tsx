@@ -12,9 +12,9 @@ export function UploadForm() {
   return (
     <form
       action={action}
-      className="rounded-2xl border border-dashed border-gray-300 bg-white p-5"
+      className="rounded-2xl border border-dashed border-border bg-surface p-5"
     >
-      <p className="text-sm font-medium text-gray-700">
+      <p className="text-sm font-medium text-muted">
         העלו תמונה או סרטון ואנחנו ננתח אותם ונציע טקסטים
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -23,7 +23,7 @@ export function UploadForm() {
           name="file"
           accept="image/*,video/mp4,application/pdf"
           required
-          className="text-sm text-gray-600 file:me-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100"
+          className="text-sm text-muted file:me-3 file:rounded-lg file:border-0 file:bg-emerald-500/10 file:px-4 file:py-2 file:text-sm file:font-medium file:text-emerald-300 hover:file:bg-emerald-500/20"
         />
         <SubmitButton size="sm" pendingLabel="מעלה ומנתח…">
           העלאה וניתוח
@@ -31,10 +31,10 @@ export function UploadForm() {
       </div>
 
       {state.error && (
-        <p className="mt-3 text-sm text-red-600">{state.error}</p>
+        <p className="mt-3 text-sm text-red-400">{state.error}</p>
       )}
       {state.ok && (
-        <p className="mt-3 text-sm text-emerald-600">
+        <p className="mt-3 text-sm text-emerald-400">
           הקובץ הועלה ונותח בהצלחה ✓
         </p>
       )}

@@ -39,24 +39,24 @@ export default async function ConnectAccountPage({
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
-      <Link href="/accounts" className="text-sm text-gray-500 hover:underline">
+      <Link href="/accounts" className="text-sm text-muted-2 hover:underline">
         ← חזרה לחשבונות
       </Link>
 
-      <h1 className="mt-3 text-2xl font-bold text-gray-900">חיבור חשבון Meta</h1>
-      <p className="mt-1 text-gray-600">
+      <h1 className="mt-3 text-2xl font-bold text-foreground">חיבור חשבון Meta</h1>
+      <p className="mt-1 text-muted">
         התחברנו לחשבון ה‑Meta שלך. בחרו אילו חשבונות מודעות לחבר.
       </p>
 
       {errorMsg && (
-        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-4 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-300">
           {errorMsg}
         </p>
       )}
 
       {!canAdd ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center">
-          <p className="text-gray-600">
+        <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
+          <p className="text-muted">
             חיברת {used} מתוך {limit} חשבונות. כדי לחבר עוד, שדרגו את התוכנית.
           </p>
           <Link
@@ -67,7 +67,7 @@ export default async function ConnectAccountPage({
           </Link>
         </div>
       ) : available.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center text-gray-500">
+        <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-10 text-center text-muted-2">
           כל החשבונות הזמינים כבר מחוברים 🎉
         </div>
       ) : (
@@ -75,11 +75,11 @@ export default async function ConnectAccountPage({
           {available.map((acc) => (
             <li
               key={acc.id}
-              className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-4"
+              className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4"
             >
               <div>
-                <p className="font-medium text-gray-900">{acc.name}</p>
-                <p className="text-xs text-gray-400" dir="ltr">
+                <p className="font-medium text-foreground">{acc.name}</p>
+                <p className="text-xs text-muted-2" dir="ltr">
                   {acc.id}
                 </p>
               </div>

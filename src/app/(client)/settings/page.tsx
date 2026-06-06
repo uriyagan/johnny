@@ -46,35 +46,35 @@ export default async function SettingsPage({
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
-      <h1 className="text-2xl font-bold text-gray-900">הגדרות</h1>
-      <p className="mt-1 text-gray-600">תקרת תקציב חודשית והתראות.</p>
+      <h1 className="text-2xl font-bold text-foreground">הגדרות</h1>
+      <p className="mt-1 text-muted">תקרת תקציב חודשית והתראות.</p>
 
       {searchParams.saved && (
-        <p className="mt-4 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+        <p className="mt-4 rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">
           ההגדרות נשמרו ✓
         </p>
       )}
       {searchParams.error === "cap" && (
-        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-4 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-300">
           נא להזין סכום תקין.
         </p>
       )}
       {searchParams.checked && CHECK_MSG[searchParams.checked] && (
-        <p className="mt-4 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-700">
+        <p className="mt-4 rounded-md bg-blue-500/10 px-3 py-2 text-sm text-blue-300">
           {CHECK_MSG[searchParams.checked]}
         </p>
       )}
 
       {/* Budget cap */}
-      <section className="mt-6 max-w-lg rounded-2xl border border-gray-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-gray-900">תקרת תקציב חודשית</h2>
-        <p className="mt-1 text-sm text-gray-500">
+      <section className="mt-6 max-w-lg rounded-2xl border border-border bg-surface p-5">
+        <h2 className="text-lg font-semibold text-foreground">תקרת תקציב חודשית</h2>
+        <p className="mt-1 text-sm text-muted-2">
           נעצור אוטומטית את הקמפיינים אם תגיע לסכום הזה — כדי שלא תוציא יותר ממה
           שתכננת.
         </p>
 
         {cap && (
-          <p className="mt-3 text-sm text-gray-600">
+          <p className="mt-3 text-sm text-muted">
             ניצול נוכחי: {ils.format(cap.spend_current_period)} מתוך{" "}
             {ils.format(cap.monthly_cap_ils)}
           </p>
@@ -107,12 +107,12 @@ export default async function SettingsPage({
               defaultValue={cap?.threshold_pct ?? 90}
             />
           </div>
-          <label className="flex items-center gap-2 text-sm text-gray-700">
+          <label className="flex items-center gap-2 text-sm text-muted">
             <input
               type="checkbox"
               name="hard_pause"
               defaultChecked={cap?.hard_pause_enabled ?? true}
-              className="h-4 w-4 rounded border-gray-300 text-emerald-600"
+              className="h-4 w-4 rounded border-border text-emerald-400"
             />
             עצור קמפיינים אוטומטית כשמגיעים לתקרה
           </label>
@@ -130,26 +130,26 @@ export default async function SettingsPage({
       </section>
 
       {/* Notifications */}
-      <h2 className="mt-8 text-lg font-semibold text-gray-900">התראות אחרונות</h2>
+      <h2 className="mt-8 text-lg font-semibold text-foreground">התראות אחרונות</h2>
       {notifications && notifications.length > 0 ? (
         <ul className="mt-4 max-w-lg space-y-3">
           {notifications.map((n) => (
             <li
               key={n.id}
-              className="rounded-2xl border border-gray-200 bg-white p-4"
+              className="rounded-2xl border border-border bg-surface p-4"
             >
               <div className="flex items-center justify-between">
-                <p className="font-medium text-gray-900">{n.title}</p>
-                <span className="text-xs text-gray-400">
+                <p className="font-medium text-foreground">{n.title}</p>
+                <span className="text-xs text-muted-2">
                   {dateTimeFmt.format(new Date(n.created_at))}
                 </span>
               </div>
-              {n.body && <p className="mt-1 text-sm text-gray-600">{n.body}</p>}
+              {n.body && <p className="mt-1 text-sm text-muted">{n.body}</p>}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mt-4 text-sm text-gray-500">אין התראות עדיין.</p>
+        <p className="mt-4 text-sm text-muted-2">אין התראות עדיין.</p>
       )}
     </div>
   );
