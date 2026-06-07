@@ -18,3 +18,17 @@ export async function dismissRecommendation(formData: FormData) {
     );
   revalidatePath("/dashboard");
 }
+
+/** Un-hides a previously dismissed recommendation. */
+export async function restoreRecommendation(formData: FormData) {
+  const key = String(formData.get("rec_key") ?? "").trim();
+  if (!key) return;
+  const user = await requireUser();
+  const supabase = createClient();
+  await supabase
+    .from("recommendation_dismissals")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("rec_key", key);
+  revalidatePath("/dashboard");
+}

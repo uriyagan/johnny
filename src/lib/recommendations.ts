@@ -10,14 +10,21 @@ export interface Recommendation {
   external?: boolean;
 }
 
+export interface RecommendationSplit {
+  /** Relevant recommendations the user hasn't dismissed. */
+  active: Recommendation[];
+  /** Relevant recommendations the user dismissed (can be restored). */
+  hidden: Recommendation[];
+}
+
 /**
- * Computes the active recommendation cards for a user from their current state,
- * excluding ones they've dismissed. Rules are intentionally simple to extend.
+ * Computes the relevant recommendation cards for a user from their current state
+ * and splits them into active vs. dismissed. Rules are simple to extend.
  */
 export async function getRecommendations(
   supabase: SupabaseClient<Database>,
   userId: string,
-): Promise<Recommendation[]> {
+): Promise<RecommendationSplit> {
   const [{ count: accountCount }, { data: cap }, { data: biz }, { data: dismissed }] =
     await Promise.all([
       supabase
@@ -76,5 +83,8 @@ export async function getRecommendations(
     });
   }
 
-  return recs.filter((r) => !dismissedKeys.has(r.key));
+  return {
+    active: recs.filter((r) => !dismissedKeys.has(r.key)),
+    hidden: recs.filter((r) => dismissedKeys.has(r.key)),
+  };
 }

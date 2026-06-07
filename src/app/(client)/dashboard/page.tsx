@@ -3,7 +3,10 @@ import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getAdsProvider } from "@/lib/ads";
 import { startCheckin, submitFeedback } from "@/lib/actions/crm";
-import { dismissRecommendation } from "@/lib/actions/recommendations";
+import {
+  dismissRecommendation,
+  restoreRecommendation,
+} from "@/lib/actions/recommendations";
 import { getRecommendations } from "@/lib/recommendations";
 import { Button } from "@/components/ui/button";
 import type { FeedbackAnalysis } from "@/lib/ai/types";
@@ -82,7 +85,8 @@ export default async function DashboardPage() {
     .eq("user_id", user.id)
     .is("ad_account_id", null)
     .maybeSingle();
-  const recommendations = await getRecommendations(supabase, user.id);
+  const { active: recommendations, hidden: hiddenRecs } =
+    await getRecommendations(supabase, user.id);
 
   const steps = [
     { label: "השלמת פרטי העסק", done: true, href: "/onboarding", cta: "עריכה" },
@@ -210,6 +214,34 @@ export default async function DashboardPage() {
             </div>
           ))}
         </section>
+      )}
+
+      {/* Dismissed recommendations (restorable) */}
+      {hiddenRecs.length > 0 && (
+        <details className="mt-4 max-w-2xl">
+          <summary className="cursor-pointer text-sm text-muted-2 hover:text-foreground">
+            המלצות שהסתרתי ({hiddenRecs.length})
+          </summary>
+          <div className="mt-3 space-y-2">
+            {hiddenRecs.map((r) => (
+              <div
+                key={r.key}
+                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface p-3"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">{r.title}</p>
+                  <p className="text-xs text-muted-2">{r.body}</p>
+                </div>
+                <form action={restoreRecommendation}>
+                  <input type="hidden" name="rec_key" value={r.key} />
+                  <Button type="submit" variant="secondary" size="sm">
+                    שחזור
+                  </Button>
+                </form>
+              </div>
+            ))}
+          </div>
+        </details>
       )}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
