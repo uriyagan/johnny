@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileTopbar } from "@/components/layout/mobile-topbar";
 import { ImpersonationBanner } from "@/components/admin/impersonation-banner";
+import { TicketSound } from "@/components/notifications/ticket-sound";
 
 export default async function ClientLayout({
   children,
@@ -33,6 +34,7 @@ export default async function ClientLayout({
 
   return (
     <div className="flex h-screen flex-col">
+      <TicketSound side="client" />
       {user.isImpersonating && <ImpersonationBanner email={user.email} />}
       <MobileTopbar displayName={displayName} email={user.email ?? ""} />
       <div className="flex min-h-0 flex-1">
