@@ -1,3 +1,5 @@
+"use client";
+
 import { signOut } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { NAV_ITEMS } from "./nav-items";
