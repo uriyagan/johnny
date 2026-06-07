@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { IconMenu2, IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { signOut } from "@/lib/actions/auth";
 import { NAV_ITEMS } from "./nav-items";
@@ -29,7 +29,7 @@ export function MobileTopbar({
           onClick={() => setOpen(true)}
           className="rounded-lg p-2 text-foreground hover:bg-white/10"
         >
-          <Menu className="h-6 w-6" />
+          <IconMenu2 className="h-6 w-6" />
         </button>
       </div>
 
@@ -48,7 +48,7 @@ export function MobileTopbar({
                 onClick={() => setOpen(false)}
                 className="rounded-lg p-2 text-foreground hover:bg-white/10"
               >
-                <X className="h-5 w-5" />
+                <IconX className="h-5 w-5" />
               </button>
             </div>
 

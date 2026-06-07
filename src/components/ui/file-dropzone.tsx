@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { UploadCloud } from "lucide-react";
+import { IconCloudUpload } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
 export function FileDropzone({
@@ -70,7 +70,7 @@ export function FileDropzone({
           className="max-h-32 rounded-lg object-contain"
         />
       ) : (
-        <UploadCloud className="h-9 w-9 text-muted-2" />
+        <IconCloudUpload className="h-9 w-9 text-muted-2" />
       )}
 
       <p className="text-sm font-medium text-foreground">
