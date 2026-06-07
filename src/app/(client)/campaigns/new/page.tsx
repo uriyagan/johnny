@@ -14,6 +14,34 @@ import {
 import type { CampaignDraft } from "@/lib/ai/types";
 import type { MetaPage } from "@/lib/ads/types";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+
+const WORK_STEPS = [
+  "מנתח את הבקשה…",
+  "כותב את הטקסט השיווקי…",
+  "יוצר את התמונה…",
+  "מסיים את הטיוטה…",
+];
+
+function JohnnyWorking() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(
+      () => setI((p) => Math.min(p + 1, WORK_STEPS.length - 1)),
+      3000,
+    );
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="mt-5 flex items-center gap-3 rounded-2xl border border-border bg-surface p-5">
+      <Spinner className="h-5 w-5 shrink-0 text-emerald-500" />
+      <div>
+        <p className="text-sm font-medium text-foreground">ג׳וני {WORK_STEPS[i]}</p>
+        <p className="text-xs text-muted-2">זה יכול לקחת כמה שניות</p>
+      </div>
+    </div>
+  );
+}
 
 const CTA_LABEL: Record<string, string> = {
   SHOP_NOW: "לקנייה",
@@ -115,9 +143,16 @@ export default function NewCampaignPage() {
           className="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
         />
         <Button onClick={() => run()} disabled={pending || !brief.trim()}>
-          {pending ? "ג׳וני עובד…" : "בנה לי קמפיין"}
+          {pending ? (
+            <span className="flex items-center gap-2">
+              <Spinner className="h-4 w-4" /> ג׳וני עובד…
+            </span>
+          ) : (
+            "בנה לי קמפיין"
+          )}
         </Button>
         {error && <p className="text-sm text-red-400">{error}</p>}
+        {pending && <JohnnyWorking />}
       </div>
 
       {/* Clarifying questions */}
@@ -241,7 +276,13 @@ export default function NewCampaignPage() {
 
               <div className="flex gap-2">
                 <Button onClick={publish} disabled={publishing || !pageId}>
-                  {publishing ? "מפרסם…" : "פרסום ל‑Meta (מושהה)"}
+                  {publishing ? (
+                    <span className="flex items-center gap-2">
+                      <Spinner className="h-4 w-4" /> מפרסם…
+                    </span>
+                  ) : (
+                    "פרסום ל‑Meta (מושהה)"
+                  )}
                 </Button>
                 <Button variant="ghost" onClick={() => run()} disabled={pending}>
                   צור גרסה אחרת
