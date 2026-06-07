@@ -105,7 +105,7 @@ export default async function DashboardPage() {
     {
       label: "יצירת הקמפיין הראשון",
       done: campaigns.length > 0,
-      href: "/campaigns/new",
+      href: "/chat?new=campaign",
       cta: "יצירה עם ג׳וני",
     },
   ];

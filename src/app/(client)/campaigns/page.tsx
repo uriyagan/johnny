@@ -80,7 +80,7 @@ export default async function CampaignsPage() {
           <p className="mt-1 text-muted">כל הקמפיינים שלך במקום אחד.</p>
         </div>
         <Link
-          href="/campaigns/new"
+          href="/chat?new=campaign"
           className="inline-flex h-11 items-center rounded-lg bg-emerald-600 px-5 text-sm font-medium text-white hover:bg-emerald-700"
         >
           + קמפיין חדש עם ג׳וני

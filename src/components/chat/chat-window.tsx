@@ -2,12 +2,16 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { sendChatMessage } from "@/lib/actions/chat";
+import { buildCampaignDraft } from "@/lib/actions/campaign-builder";
+import { CampaignCard } from "@/components/chat/campaign-card";
+import type { CampaignDraft } from "@/lib/ai/types";
 import { cn } from "@/lib/utils";
 
 export type ChatMessageView = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  campaign?: { draft: CampaignDraft; imageUrl: string | null };
 };
 
 const EXAMPLES = [
@@ -16,20 +20,46 @@ const EXAMPLES = [
   "אפשר לעצור את הקמפיין?",
 ];
 
+const CAMPAIGN_KICKOFF =
+  "בוא ניצור קמפיין חדש! מה נפרסם הפעם — איזה מוצר או שירות נרצה לקדם? אפשר גם לציין תקציב יומי וקישור לאתר 🙂";
+
 export function ChatWindow({
   initialSessionId,
   initialMessages,
+  kickoff,
 }: {
   initialSessionId: string | null;
   initialMessages: ChatMessageView[];
+  kickoff?: "campaign";
 }) {
   const [sessionId, setSessionId] = useState(initialSessionId);
   const [messages, setMessages] = useState<ChatMessageView[]>(initialMessages);
   const [input, setInput] = useState("");
+  const [mode, setMode] = useState<"chat" | "campaign">("chat");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const tempCounter = useRef(0);
+  const campaignRef = useRef<{ brief: string; answers: string }>({
+    brief: "",
+    answers: "",
+  });
+  const seeded = useRef(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const nextId = () => `tmp-${tempCounter.current++}`;
+  const pushAssistant = (content: string, campaign?: ChatMessageView["campaign"]) =>
+    setMessages((p) => [...p, { id: nextId(), role: "assistant", content, campaign }]);
+
+  // Campaign kickoff (from "+ קמפיין חדש עם ג׳וני").
+  useEffect(() => {
+    if (kickoff === "campaign" && !seeded.current) {
+      seeded.current = true;
+      setMode("campaign");
+      campaignRef.current = { brief: "", answers: "" };
+      pushAssistant(CAMPAIGN_KICKOFF);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kickoff]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,9 +70,35 @@ export function ChatWindow({
     if (!content || pending) return;
     setError(null);
     setInput("");
+    setMessages((prev) => [...prev, { id: nextId(), role: "user", content }]);
 
-    const tempId = `tmp-${tempCounter.current++}`;
-    setMessages((prev) => [...prev, { id: tempId, role: "user", content }]);
+    if (mode === "campaign") {
+      startTransition(async () => {
+        const ref = campaignRef.current;
+        if (!ref.brief) ref.brief = content;
+        else ref.answers = ref.answers ? `${ref.answers}\n${content}` : content;
+
+        const res = await buildCampaignDraft({
+          brief: ref.brief,
+          answers: ref.answers || undefined,
+        });
+        if (!res.ok) {
+          pushAssistant(res.error);
+          return;
+        }
+        if (!res.ready) {
+          pushAssistant(res.questions.join("\n"));
+          return;
+        }
+        campaignRef.current = { brief: "", answers: "" };
+        setMode("chat");
+        pushAssistant("הכנתי הצעה לקמפיין 👇 אפשר לבחור עמוד, להזין כתובת יעד ולפרסם:", {
+          draft: res.draft,
+          imageUrl: res.imageUrl,
+        });
+      });
+      return;
+    }
 
     startTransition(async () => {
       const res = await sendChatMessage({ sessionId, content });
@@ -51,10 +107,7 @@ export function ChatWindow({
         return;
       }
       setSessionId(res.sessionId);
-      setMessages((prev) => [
-        ...prev,
-        { id: res.assistant.id, role: "assistant", content: res.assistant.content },
-      ]);
+      pushAssistant(res.assistant.content);
     });
   }
 
@@ -62,21 +115,21 @@ export function ChatWindow({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-border px-6 py-4">
-        <h1 className="text-lg font-semibold text-foreground">צ'אט</h1>
+      <div className="border-b border-border px-4 py-4 sm:px-6">
+        <h1 className="text-lg font-semibold text-foreground">
+          {mode === "campaign" ? "בניית קמפיין עם ג׳וני" : "דברו עם ג׳וני"}
+        </h1>
         <p className="text-sm text-muted-2">
           דברו איתי במילים שלכם — אני כאן כדי לעזור.
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 py-6">
+      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
         {isEmpty ? (
           <div className="mx-auto max-w-md pt-10 text-center">
             <p className="text-2xl">👋</p>
             <p className="mt-2 font-medium text-foreground">איך אפשר לעזור?</p>
-            <p className="mt-1 text-sm text-muted-2">
-              נסו לכתוב לי משהו, למשל:
-            </p>
+            <p className="mt-1 text-sm text-muted-2">נסו לכתוב לי משהו, למשל:</p>
             <div className="mt-4 flex flex-col gap-2">
               {EXAMPLES.map((ex) => (
                 <button
@@ -92,19 +145,27 @@ export function ChatWindow({
           </div>
         ) : (
           <div className="mx-auto flex max-w-2xl flex-col gap-3">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={cn(
-                  "max-w-[80%] rounded-2xl px-4 py-2 text-sm leading-relaxed",
-                  m.role === "user"
-                    ? "self-start bg-emerald-600 text-white"
-                    : "self-end border border-border bg-surface text-foreground",
-                )}
-              >
-                {m.content}
-              </div>
-            ))}
+            {messages.map((m) =>
+              m.campaign ? (
+                <CampaignCard
+                  key={m.id}
+                  draft={m.campaign.draft}
+                  imageUrl={m.campaign.imageUrl}
+                />
+              ) : (
+                <div
+                  key={m.id}
+                  className={cn(
+                    "max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm leading-relaxed",
+                    m.role === "user"
+                      ? "self-start bg-emerald-600 text-white"
+                      : "self-end border border-border bg-surface text-foreground",
+                  )}
+                >
+                  {m.content}
+                </div>
+              ),
+            )}
             {pending && (
               <div className="flex items-center gap-2 self-end rounded-2xl border border-border bg-surface px-4 py-2.5 text-sm text-muted-2">
                 <span className="flex gap-1">
@@ -112,7 +173,7 @@ export function ChatWindow({
                   <span className="h-2 w-2 animate-bounce rounded-full bg-emerald-500 [animation-delay:150ms]" />
                   <span className="h-2 w-2 animate-bounce rounded-full bg-emerald-500 [animation-delay:300ms]" />
                 </span>
-                ג׳וני חושב…
+                {mode === "campaign" ? "ג׳וני בונה את הקמפיין…" : "ג׳וני חושב…"}
               </div>
             )}
             <div ref={endRef} />
@@ -125,14 +186,16 @@ export function ChatWindow({
           e.preventDefault();
           send(input);
         }}
-        className="border-t border-border px-6 py-4"
+        className="border-t border-border px-4 py-4 sm:px-6"
       >
         {error && <p className="mb-2 text-sm text-red-400">{error}</p>}
         <div className="mx-auto flex max-w-2xl items-center gap-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="כתבו הודעה…"
+            placeholder={
+              mode === "campaign" ? "ספרו לי מה לפרסם…" : "כתבו הודעה…"
+            }
             className="h-11 flex-1 rounded-full border border-border bg-surface px-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
           <button

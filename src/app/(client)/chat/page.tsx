@@ -5,9 +5,14 @@ import {
   type ChatMessageView,
 } from "@/components/chat/chat-window";
 
-export default async function ChatPage() {
+export default async function ChatPage({
+  searchParams,
+}: {
+  searchParams: { new?: string };
+}) {
   const user = await requireUser();
   const supabase = createClient();
+  const kickoff = searchParams.new === "campaign" ? "campaign" : undefined;
 
   // Load the most recent session and its messages.
   const { data: session } = await supabase
@@ -38,7 +43,8 @@ export default async function ChatPage() {
   return (
     <ChatWindow
       initialSessionId={session?.id ?? null}
-      initialMessages={messages}
+      initialMessages={kickoff ? [] : messages}
+      kickoff={kickoff}
     />
   );
 }
