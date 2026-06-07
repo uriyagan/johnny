@@ -27,7 +27,7 @@ export default async function AdminLayout({
               href="/dashboard"
               className="text-sm text-muted-2 hover:underline"
             >
-              ← לאפליקציה
+              → לאפליקציה
             </Link>
             <form action={signOut}>
               <Button type="submit" variant="ghost" size="sm">

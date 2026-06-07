@@ -42,7 +42,7 @@ export default async function AdminTicketPage({
   return (
     <div>
       <Link href="/admin/tickets" className="text-sm text-muted-2 hover:underline">
-        ← חזרה לטיקטים
+        → חזרה לטיקטים
       </Link>
       <div className="mt-3 flex items-center justify-between gap-3">
         <div>

@@ -34,7 +34,7 @@ export default async function SupportTicketPage({
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <Link href="/support" className="text-sm text-muted-2 hover:underline">
-        ← חזרה לתמיכה
+        → חזרה לתמיכה
       </Link>
       <div className="mt-3 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">{ticket.subject}</h1>

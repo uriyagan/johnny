@@ -49,7 +49,7 @@ export default async function ConnectAccountPage({
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <Link href="/accounts" className="text-sm text-muted-2 hover:underline">
-        ← חזרה לחשבונות
+        → חזרה לחשבונות
       </Link>
 
       <h1 className="mt-3 text-2xl font-bold text-foreground">חיבור חשבון Meta</h1>

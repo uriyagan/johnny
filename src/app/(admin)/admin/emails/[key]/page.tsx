@@ -31,7 +31,7 @@ export default async function EditEmailPage({
   return (
     <div>
       <Link href="/admin/emails" className="text-sm text-muted-2 hover:underline">
-        ← חזרה לאוטומציות
+        → חזרה לאוטומציות
       </Link>
       <h1 className="mt-3 text-2xl font-bold text-foreground">{trigger.name}</h1>
       <p className="mt-1 text-muted">{trigger.description}</p>
