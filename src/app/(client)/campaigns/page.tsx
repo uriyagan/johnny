@@ -39,7 +39,7 @@ export default async function CampaignsPage() {
 
   if (accountName.size === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-8">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-8">
         <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>
         <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-12 text-center">
           <p className="text-muted-2">חברו חשבון מודעות כדי לראות קמפיינים.</p>
@@ -73,7 +73,7 @@ export default async function CampaignsPage() {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">קמפיינים</h1>

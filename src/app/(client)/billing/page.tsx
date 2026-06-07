@@ -52,7 +52,7 @@ export default async function BillingPage() {
   const status = sub ? STATUS[sub.status] : null;
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <h1 className="text-2xl font-bold text-foreground">מנוי וחיובים</h1>
       <p className="mt-1 text-muted">ניהול התוכנית, אמצעי התשלום והחשבוניות.</p>
       <p className="mt-2 inline-block rounded-md bg-amber-500/10 px-2.5 py-1 text-xs text-amber-300">
@@ -158,7 +158,7 @@ export default async function BillingPage() {
 
       {/* Invoices */}
       <h2 className="mt-8 text-lg font-semibold text-foreground">חשבוניות</h2>
-      <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
           <thead className="bg-background text-muted-2">
             <tr>

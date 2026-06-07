@@ -18,7 +18,7 @@ const ITEMS = [
 export function AdminNav() {
   const pathname = usePathname();
   return (
-    <nav className="flex gap-1">
+    <nav className="flex gap-1 overflow-x-auto whitespace-nowrap">
       {ITEMS.map((item) => {
         const active =
           item.href === "/admin"

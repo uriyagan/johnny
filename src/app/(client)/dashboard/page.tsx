@@ -115,7 +115,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <h1 className="text-2xl font-bold text-foreground">שלום, {name} 👋</h1>
       <p className="mt-1 text-muted">
         {profile?.business_name

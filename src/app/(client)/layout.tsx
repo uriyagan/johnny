@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
+import { MobileTopbar } from "@/components/layout/mobile-topbar";
 import { ImpersonationBanner } from "@/components/admin/impersonation-banner";
 
 export default async function ClientLayout({
@@ -33,6 +34,7 @@ export default async function ClientLayout({
   return (
     <div className="flex h-screen flex-col">
       {user.isImpersonating && <ImpersonationBanner email={user.email} />}
+      <MobileTopbar displayName={displayName} email={user.email ?? ""} />
       <div className="flex min-h-0 flex-1">
         <Sidebar displayName={displayName} email={user.email ?? ""} />
         <main className="flex flex-1 flex-col overflow-hidden">{children}</main>

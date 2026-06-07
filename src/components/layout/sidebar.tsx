@@ -11,7 +11,7 @@ export function Sidebar({
   email: string;
 }) {
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-s border-border bg-surface">
+    <aside className="hidden w-64 shrink-0 flex-col border-s border-border bg-surface md:flex">
       <div className="px-5 py-6">
         <span className="text-2xl font-bold text-emerald-400">Johnny</span>
       </div>

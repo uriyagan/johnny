@@ -123,7 +123,7 @@ export default function NewCampaignPage() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <Link href="/campaigns" className="text-sm text-muted-2 hover:underline">
         ← חזרה לקמפיינים
       </Link>

@@ -79,7 +79,7 @@ export default async function AdminErrorsPage({
         })}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
           <thead className="bg-background text-muted-2">
             <tr>

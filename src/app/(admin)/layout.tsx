@@ -15,9 +15,9 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-surface">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3">
-          <div className="flex items-center gap-6">
-            <span className="font-bold text-foreground">Johnny · ניהול</span>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          <div className="flex min-w-0 items-center gap-4 sm:gap-6">
+            <span className="shrink-0 font-bold text-foreground">Johnny · ניהול</span>
             <AdminNav />
           </div>
           <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ export default async function AdminLayout({
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
     </div>
   );
 }

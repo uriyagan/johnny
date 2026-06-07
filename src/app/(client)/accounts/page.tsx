@@ -54,7 +54,7 @@ export default async function AccountsPage({
   const metaNotice = searchParams.meta ? META_MSG[searchParams.meta] : undefined;
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       {metaNotice && (
         <p
           className={`mb-4 rounded-md px-3 py-2 text-sm ${

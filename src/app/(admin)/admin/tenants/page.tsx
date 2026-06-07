@@ -31,7 +31,7 @@ export default async function TenantsPage() {
     <div>
       <h1 className="text-2xl font-bold text-foreground">לקוחות</h1>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
           <thead className="bg-background text-muted-2">
             <tr>

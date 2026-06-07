@@ -47,7 +47,7 @@ export default async function ConnectAccountPage({
   const errorMsg = searchParams.error ? ERRORS[searchParams.error] : undefined;
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
       <Link href="/accounts" className="text-sm text-muted-2 hover:underline">
         ← חזרה לחשבונות
       </Link>
