@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { requireAdmin } from "@/lib/auth";
+import { requireVerifiedAdmin } from "@/lib/auth";
 import { signOut } from "@/lib/actions/auth";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ export default async function AdminLayout({
 }: {
   children: ReactNode;
 }) {
-  await requireAdmin();
+  await requireVerifiedAdmin();
 
   return (
     <div className="min-h-screen bg-background">

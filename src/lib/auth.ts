@@ -70,3 +70,11 @@ export async function requireAdmin() {
   if (!(await isRealAdmin(user.id))) redirect("/dashboard");
   return user;
 }
+
+/** Admin + a valid email-2FA session; otherwise sends to the 2FA screen. */
+export async function requireVerifiedAdmin() {
+  const user = await requireAdmin();
+  const { hasValidAdmin2FA } = await import("@/lib/admin-2fa");
+  if (!hasValidAdmin2FA(user.id)) redirect("/admin-verify");
+  return user;
+}

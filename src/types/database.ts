@@ -668,6 +668,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      admin_2fa_codes: {
+        Row: {
+          user_id: string;
+          code_hash: string;
+          expires_at: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          code_hash: string;
+          expires_at: string;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          code_hash?: string;
+          expires_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       app_errors: {
         Row: {
           id: string;
