@@ -32,7 +32,8 @@ export default async function DashboardPage() {
   const { data: connected } = await supabase
     .from("ad_accounts")
     .select("external_account_id")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .is("deleted_at", null);
   const ids = (connected ?? []).map((r) => r.external_account_id);
 
   let accountData: (MetaAdAccount | null)[] = [];

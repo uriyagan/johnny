@@ -23,6 +23,7 @@ export default async function AssetsPage() {
       "id, storage_path, original_filename, mime_type, kind, ai_analysis, generated_copy",
     )
     .eq("user_id", user.id)
+    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   const list = assets ?? [];

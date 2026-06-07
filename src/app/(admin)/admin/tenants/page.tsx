@@ -16,7 +16,7 @@ export default async function TenantsPage() {
         .select("id, full_name, business_name, role, created_at")
         .order("created_at", { ascending: false }),
       admin.from("subscriptions").select("user_id, tier"),
-      admin.from("ad_accounts").select("user_id"),
+      admin.from("ad_accounts").select("user_id").is("deleted_at", null),
     ]);
 
   const tierByUser = new Map(

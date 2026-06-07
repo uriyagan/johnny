@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
 
   const { data: accounts } = await admin
     .from("ad_accounts")
-    .select("user_id");
+    .select("user_id")
+    .is("deleted_at", null);
   const userIds = [...new Set((accounts ?? []).map((a) => a.user_id))];
 
   const intervalMs = CHECKIN_INTERVAL_DAYS * 24 * 60 * 60 * 1000;

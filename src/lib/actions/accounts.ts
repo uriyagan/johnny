@@ -45,7 +45,12 @@ export async function disconnectAccount(formData: FormData) {
   const user = await requireUser();
   const supabase = createClient();
 
-  await supabase.from("ad_accounts").delete().eq("id", id).eq("user_id", user.id);
+  // Soft delete (recoverable from /admin/trash).
+  await supabase
+    .from("ad_accounts")
+    .update({ deleted_at: new Date().toISOString(), status: "disconnected" })
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   revalidatePath("/accounts");
   revalidatePath("/dashboard");

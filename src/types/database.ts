@@ -101,6 +101,7 @@ export type Database = {
           token_expires_at: string | null;
           metadata: Json;
           connected_at: string | null;
+          deleted_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -115,6 +116,7 @@ export type Database = {
           token_expires_at?: string | null;
           metadata?: Json;
           connected_at?: string | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -129,6 +131,7 @@ export type Database = {
           token_expires_at?: string | null;
           metadata?: Json;
           connected_at?: string | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -298,6 +301,7 @@ export type Database = {
           status: Database["public"]["Enums"]["asset_status"];
           ai_analysis: Json | null;
           generated_copy: Json | null;
+          deleted_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -311,6 +315,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["asset_status"];
           ai_analysis?: Json | null;
           generated_copy?: Json | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -324,6 +329,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["asset_status"];
           ai_analysis?: Json | null;
           generated_copy?: Json | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };

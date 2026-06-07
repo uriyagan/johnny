@@ -36,7 +36,8 @@ export async function evaluateBudget(userId: string): Promise<BudgetResult> {
   const { data: accounts } = await supabase
     .from("ad_accounts")
     .select("external_account_id")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .is("deleted_at", null);
   const ids = (accounts ?? []).map((a) => a.external_account_id);
 
   let spend = 0;

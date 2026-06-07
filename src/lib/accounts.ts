@@ -23,7 +23,8 @@ export async function getTierLimitInfo(
     supabase
       .from("ad_accounts")
       .select("id", { count: "exact", head: true })
-      .eq("user_id", userId),
+      .eq("user_id", userId)
+      .is("deleted_at", null),
   ]);
 
   const tier = (sub?.tier ?? "tier_1") as Tier;

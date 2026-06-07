@@ -58,7 +58,8 @@ export async function getRecommendations(
       supabase
         .from("ad_accounts")
         .select("external_account_id")
-        .eq("user_id", userId),
+        .eq("user_id", userId)
+        .is("deleted_at", null),
       supabase
         .from("budget_caps")
         .select("monthly_cap_ils, spend_current_period")

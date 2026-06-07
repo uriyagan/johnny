@@ -82,17 +82,12 @@ export async function deleteAsset(formData: FormData) {
   const user = await requireUser();
   const supabase = createClient();
 
-  const { data: asset } = await supabase
+  // Soft delete — keep the storage object so it can be restored from /admin/trash.
+  await supabase
     .from("assets")
-    .select("storage_path")
+    .update({ deleted_at: new Date().toISOString() })
     .eq("id", id)
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (asset) {
-    await supabase.storage.from("assets").remove([asset.storage_path]);
-    await supabase.from("assets").delete().eq("id", id).eq("user_id", user.id);
-  }
+    .eq("user_id", user.id);
 
   revalidatePath("/assets");
 }

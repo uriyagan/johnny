@@ -37,6 +37,7 @@ export default async function AccountsPage({
     .from("ad_accounts")
     .select("id, name, external_account_id, status")
     .eq("user_id", user.id)
+    .is("deleted_at", null)
     .order("created_at", { ascending: true });
 
   const { limit, used, canAdd } = await getTierLimitInfo(supabase, user.id);

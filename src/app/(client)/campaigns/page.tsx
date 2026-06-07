@@ -31,7 +31,8 @@ export default async function CampaignsPage() {
   const { data: accounts } = await supabase
     .from("ad_accounts")
     .select("external_account_id, name")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .is("deleted_at", null);
 
   const accountName = new Map(
     (accounts ?? []).map((a) => [a.external_account_id, a.name ?? "חשבון"]),

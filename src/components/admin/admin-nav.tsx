@@ -12,6 +12,7 @@ const ITEMS = [
   { href: "/admin/emails", label: "מיילים" },
   { href: "/admin/usage", label: "עלויות" },
   { href: "/admin/kill-switches", label: "מתגי חירום" },
+  { href: "/admin/trash", label: "סל מיחזור" },
   { href: "/admin/errors", label: "שגיאות" },
 ];
 

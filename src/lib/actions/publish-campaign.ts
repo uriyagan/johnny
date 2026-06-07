@@ -42,6 +42,7 @@ export async function publishCampaign(input: {
       .from("ad_accounts")
       .select("external_account_id")
       .eq("user_id", user.id)
+      .is("deleted_at", null)
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
