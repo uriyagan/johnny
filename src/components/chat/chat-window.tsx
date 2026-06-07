@@ -106,8 +106,13 @@ export function ChatWindow({
               </div>
             ))}
             {pending && (
-              <div className="self-end rounded-2xl border border-border bg-surface px-4 py-2 text-sm text-muted-2">
-                ג׳וני מקליד…
+              <div className="flex items-center gap-2 self-end rounded-2xl border border-border bg-surface px-4 py-2.5 text-sm text-muted-2">
+                <span className="flex gap-1">
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-emerald-500 [animation-delay:0ms]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-emerald-500 [animation-delay:150ms]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-emerald-500 [animation-delay:300ms]" />
+                </span>
+                ג׳וני חושב…
               </div>
             )}
             <div ref={endRef} />
