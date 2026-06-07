@@ -8,6 +8,7 @@ import type { NavItem } from "./nav-items";
 export function NavLink({ item }: { item: NavItem }) {
   const pathname = usePathname();
   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+  const Icon = item.icon;
 
   return (
     <Link
@@ -19,18 +20,7 @@ export function NavLink({ item }: { item: NavItem }) {
           : "text-muted hover:bg-surface-2 hover:text-foreground",
       )}
     >
-      <svg
-        className="h-5 w-5 shrink-0"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <path d={item.icon} />
-      </svg>
+      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       <span>{item.label}</span>
     </Link>
   );

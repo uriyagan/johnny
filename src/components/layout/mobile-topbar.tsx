@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut } from "@/lib/actions/auth";
 import { NAV_ITEMS } from "./nav-items";
@@ -28,9 +29,7 @@ export function MobileTopbar({
           onClick={() => setOpen(true)}
           className="rounded-lg p-2 text-foreground hover:bg-white/10"
         >
-          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <Menu className="h-6 w-6" />
         </button>
       </div>
 
@@ -49,9 +48,7 @@ export function MobileTopbar({
                 onClick={() => setOpen(false)}
                 className="rounded-lg p-2 text-foreground hover:bg-white/10"
               >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
-                  <path d="M6 6l12 12M18 6L6 18" />
-                </svg>
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -59,6 +56,7 @@ export function MobileTopbar({
               {NAV_ITEMS.map((item) => {
                 const active =
                   pathname === item.href || pathname.startsWith(`${item.href}/`);
+                const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
@@ -71,9 +69,7 @@ export function MobileTopbar({
                         : "text-muted hover:bg-white/5 hover:text-foreground",
                     )}
                   >
-                    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                      <path d={item.icon} />
-                    </svg>
+                    <Icon className="h-5 w-5 shrink-0" />
                     {item.label}
                   </Link>
                 );
