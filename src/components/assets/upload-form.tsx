@@ -3,6 +3,7 @@
 import { useFormState } from "react-dom";
 import { uploadAsset, type AssetUploadState } from "@/lib/actions/assets";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { FileDropzone } from "@/components/ui/file-dropzone";
 
 const initial: AssetUploadState = {};
 
@@ -17,17 +18,18 @@ export function UploadForm() {
       <p className="text-sm font-medium text-muted">
         העלו תמונה או סרטון ואנחנו ננתח אותם ונציע טקסטים
       </p>
-      <div className="mt-3 flex flex-wrap items-center gap-3">
-        <input
-          type="file"
+      <div className="mt-3">
+        <FileDropzone
           name="file"
           accept="image/*,video/mp4,application/pdf"
-          required
-          className="text-sm text-muted file:me-3 file:rounded-lg file:border-0 file:bg-emerald-500/10 file:px-4 file:py-2 file:text-sm file:font-medium file:text-emerald-300 hover:file:bg-emerald-500/20"
+          label="גררו תמונה/סרטון לכאן או לחצו לבחירה"
+          hint="תמונה, וידאו (MP4) או PDF — עד 10MB"
         />
-        <SubmitButton size="sm" pendingLabel="מעלה ומנתח…">
-          העלאה וניתוח
-        </SubmitButton>
+        <div className="mt-3">
+          <SubmitButton size="sm" pendingLabel="מעלה ומנתח…">
+            העלאה וניתוח
+          </SubmitButton>
+        </div>
       </div>
 
       {state.error && (

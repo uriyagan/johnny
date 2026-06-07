@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { FileDropzone } from "@/components/ui/file-dropzone";
 
 const initial: OnboardingState = {};
 
@@ -98,13 +99,12 @@ export function OnboardingForm() {
       </div>
 
       <div>
-        <Label htmlFor="logo">לוגו (אופציונלי)</Label>
-        <input
-          id="logo"
-          type="file"
+        <Label>לוגו (אופציונלי)</Label>
+        <FileDropzone
           name="logo"
           accept="image/*"
-          className="text-sm text-muted file:me-3 file:rounded-lg file:border-0 file:bg-emerald-500/10 file:px-4 file:py-2 file:text-sm file:font-medium file:text-emerald-300 hover:file:bg-emerald-500/20"
+          label="גררו לוגו לכאן או לחצו לבחירה"
+          hint="PNG / JPG — עד 5MB"
         />
       </div>
 
