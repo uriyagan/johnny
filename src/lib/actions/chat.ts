@@ -41,16 +41,19 @@ export async function sendChatMessage(input: {
     .insert({ session_id: sessionId, role: "user", content });
   if (userErr) return { ok: false, error: "שגיאה בשמירת ההודעה" };
 
-  // Recent context for the model.
-  const { data: history } = await supabase
+  // Recent context for the model: the LATEST 20 messages, in chronological order.
+  const { data: recent } = await supabase
     .from("chat_messages")
-    .select("role, content")
+    .select("role, content, created_at")
     .eq("session_id", sessionId)
-    .order("created_at", { ascending: true })
+    .order("created_at", { ascending: false })
     .limit(20);
+  const history = (recent ?? [])
+    .reverse()
+    .map(({ role, content }) => ({ role, content }));
 
   const ai = getAIProvider();
-  const result = await ai.chat((history ?? []) as ChatMessageInput[]);
+  const result = await ai.chat(history as ChatMessageInput[]);
 
   const { data: assistantRow, error: assistantErr } = await supabase
     .from("chat_messages")
